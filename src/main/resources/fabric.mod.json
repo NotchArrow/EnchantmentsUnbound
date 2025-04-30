@@ -1,0 +1,41 @@
+{
+	"schemaVersion": 1,
+	"id": "enchantments-unbound",
+	"version": "${version}",
+	"name": "Enchantments Unbound",
+	"description": "Uncapped Enchantment Levels in the Anvil",
+	"authors": [
+		"NotchArrow"
+	],
+	"contact": {
+		"homepage": "https://github.com/NotchArrow/EnchantmentsUnbound/",
+		"sources": "https://github.com/NotchArrow/EnchantmentsUnbound/"
+	},
+	"license": "MIT",
+	"icon": "assets/enchantments-unbound/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"notcharrow.enchantmentsunbound.EnchantmentsUnbound"
+		],
+		"client": [
+			"notcharrow.enchantmentsunbound.EnchantmentsUnboundClient"
+		]
+	},
+	"mixins": [
+		"enchantments-unbound.mixins.json",
+		{
+			"config": "enchantments-unbound.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.16.14",
+		"minecraft": "~1.21",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
