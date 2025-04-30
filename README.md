@@ -1,1 +1,1 @@
-# UncappedEnchants
+# EnchantmentsUnbound
