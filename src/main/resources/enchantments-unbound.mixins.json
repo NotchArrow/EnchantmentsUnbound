@@ -3,7 +3,8 @@
 	"package": "notcharrow.enchantmentsunbound.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"ExampleMixin"
+		"AnvilScreenHandlerAccessorMixin",
+		"AnvilScreenHandlerMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
