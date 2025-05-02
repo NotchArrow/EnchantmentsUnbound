@@ -5,20 +5,17 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.screen.Property;
+import notcharrow.enchantmentsunbound.config.ConfigManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Map;
 import java.util.Set;
 
 @Mixin(AnvilScreenHandler.class)
@@ -32,6 +29,22 @@ public class AnvilScreenHandlerMixin {
 		ItemStack rightInput = self.getSlot(1).getStack();
 
 		if (leftInput.isEmpty() || rightInput.isEmpty()) {
+			return;
+		}
+
+		Item item = leftInput.getItem();
+		if (!(item instanceof EnchantedBookItem ||
+				item instanceof ArmorItem ||
+				item instanceof ToolItem ||
+				item instanceof SwordItem ||
+				item instanceof BowItem ||
+				item instanceof CrossbowItem ||
+				item instanceof TridentItem ||
+				item instanceof ShieldItem ||
+				item instanceof ElytraItem)) {
+			return;
+		}
+		if (!(rightInput.getItem() instanceof EnchantedBookItem)) {
 			return;
 		}
 
@@ -57,26 +70,23 @@ public class AnvilScreenHandlerMixin {
 
 		if (hasOverleveledEnchants(outputEnchants, leftEnchants, rightEnchants)) {
 			ItemStack output = leftInput.copy();
-			if (leftInput.getItem() == Items.ENCHANTED_BOOK && rightInput.getItem() == Items.ENCHANTED_BOOK) {
-				for (Object2IntMap.Entry<RegistryEntry<Enchantment>> entry: outputEnchants.object2IntEntrySet()) {
-					RegistryEntry<Enchantment> enchantment = entry.getKey();
-					output.addEnchantment(enchantment, entry.getIntValue());
-				}
-			} else if (rightInput.getItem() == Items.ENCHANTED_BOOK) {
-				for (Object2IntMap.Entry<RegistryEntry<Enchantment>> entry: outputEnchants.object2IntEntrySet()) {
-					RegistryEntry<Enchantment> enchantment = entry.getKey();
-					output.addEnchantment(enchantment, entry.getIntValue());
-				}
-				for (Object2IntMap.Entry<RegistryEntry<Enchantment>> entry: rightEnchants.object2IntEntrySet()) {
-					RegistryEntry<Enchantment> enchantment = entry.getKey();
-					output.addEnchantment(enchantment, entry.getIntValue());
-				}
+			for (Object2IntMap.Entry<RegistryEntry<Enchantment>> entry: outputEnchants.object2IntEntrySet()) {
+				RegistryEntry<Enchantment> enchantment = entry.getKey();
+				output.addEnchantment(enchantment, entry.getIntValue());
+			}
+			for (Object2IntMap.Entry<RegistryEntry<Enchantment>> entry: leftEnchants.object2IntEntrySet()) {
+				RegistryEntry<Enchantment> enchantment = entry.getKey();
+				output.addEnchantment(enchantment, entry.getIntValue());
+			}
+			for (Object2IntMap.Entry<RegistryEntry<Enchantment>> entry: rightEnchants.object2IntEntrySet()) {
+				RegistryEntry<Enchantment> enchantment = entry.getKey();
+				output.addEnchantment(enchantment, entry.getIntValue());
 			}
 
 			self.getSlot(2).setStack(output);
 
 			Property levelCost = ((AnvilScreenHandlerAccessorMixin) self).getLevelCost();
-			levelCost.set(39);
+			levelCost.set(Math.max((Math.min(ConfigManager.config.levelCost, 39)), 1)); // get config value, but less than 39 and at least 1
 
 			ci.cancel();
 		}
@@ -97,6 +107,7 @@ public class AnvilScreenHandlerMixin {
 		}
 	}
 
+	@Unique
 	private static boolean hasOverleveledEnchants(Object2IntMap<RegistryEntry<Enchantment>> outputEnchants,
 												  Object2IntMap<RegistryEntry<Enchantment>> leftEnchants,
 												  Object2IntMap<RegistryEntry<Enchantment>> rightEnchants) {

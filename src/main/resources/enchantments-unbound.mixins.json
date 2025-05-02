@@ -1,12 +1,13 @@
 {
-	"required": true,
-	"package": "notcharrow.enchantmentsunbound.mixin",
-	"compatibilityLevel": "JAVA_21",
-	"mixins": [
-		"AnvilScreenHandlerAccessorMixin",
-		"AnvilScreenHandlerMixin"
-	],
-	"injectors": {
-		"defaultRequire": 1
+  "required": true,
+  "package": "notcharrow.enchantmentsunbound.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "AnvilScreenHandlerAccessorMixin",
+    "AnvilScreenHandlerMixin",
+    "EnchantmentMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
 	}
 }
