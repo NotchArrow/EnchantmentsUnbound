@@ -7,6 +7,7 @@ import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.*;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.screen.Property;
 import notcharrow.enchantmentsunbound.config.ConfigManager;
@@ -32,19 +33,12 @@ public class AnvilScreenHandlerMixin {
 			return;
 		}
 
-		Item item = leftInput.getItem();
-		if (!(item instanceof EnchantedBookItem ||
-				item instanceof ArmorItem ||
-				item instanceof ToolItem ||
-				item instanceof SwordItem ||
-				item instanceof BowItem ||
-				item instanceof CrossbowItem ||
-				item instanceof TridentItem ||
-				item instanceof ShieldItem ||
-				item instanceof ElytraItem)) {
+		if (!(leftInput.getItem() == Items.ENCHANTED_BOOK ||
+				leftInput.isIn(ItemTags.DURABILITY_ENCHANTABLE))) {
 			return;
 		}
-		if (!(rightInput.getItem() instanceof EnchantedBookItem)) {
+		if (!(rightInput.getItem() == Items.ENCHANTED_BOOK ||
+				rightInput.isIn(ItemTags.DURABILITY_ENCHANTABLE))) {
 			return;
 		}
 
