@@ -1,19 +1,18 @@
 package notcharrow.enchantmentsunbound.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.registry.entry.RegistryEntry;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(Enchantment.class)
 public abstract class EnchantmentMixin {
 
-	/**
-	 * @author NotchArrow
-	 * @reason Allow enchantment combos like Mending + Infinity
-	 */
-	@Overwrite
-	public static boolean canBeCombined(RegistryEntry<Enchantment> first, RegistryEntry<Enchantment> second) {
+	@ModifyReturnValue(
+			method = "canBeCombined(Lnet/minecraft/registry/entry/RegistryEntry;Lnet/minecraft/registry/entry/RegistryEntry;)Z",
+			at = @At("RETURN")
+	)
+	private static boolean alwaysTrue(boolean original) {
 		return true;
 	}
 }

@@ -97,9 +97,13 @@ public class AnvilScreenHandlerMixin {
 		enchantments.clear();
 
 		if (!itemStack.isEmpty()) {
-			Set<Object2IntMap.Entry<RegistryEntry<Enchantment>>> itemEnchantments = itemStack.getItem() == Items.ENCHANTED_BOOK
-					? itemStack.getOrDefault(DataComponentTypes.STORED_ENCHANTMENTS, ItemEnchantmentsComponent.DEFAULT).getEnchantmentEntries()
-					: itemStack.getEnchantments().getEnchantmentEntries();
+			Set<Object2IntMap.Entry<RegistryEntry<Enchantment>>> itemEnchantments;
+
+			if (itemStack.getItem() == Items.ENCHANTED_BOOK) {
+				itemEnchantments = itemStack.getOrDefault(DataComponentTypes.STORED_ENCHANTMENTS, ItemEnchantmentsComponent.DEFAULT).getEnchantmentEntries();
+			} else {
+				itemEnchantments = itemStack.getOrDefault(DataComponentTypes.ENCHANTMENTS, ItemEnchantmentsComponent.DEFAULT).getEnchantmentEntries();
+			}
 
 			for (Object2IntMap.Entry<RegistryEntry<Enchantment>> entry : itemEnchantments) {
 				enchantments.put(entry.getKey(), entry.getIntValue());

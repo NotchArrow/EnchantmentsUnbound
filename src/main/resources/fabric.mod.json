@@ -17,17 +17,10 @@
 	"entrypoints": {
 		"main": [
 			"notcharrow.enchantmentsunbound.EnchantmentsUnbound"
-		],
-		"client": [
-			"notcharrow.enchantmentsunbound.EnchantmentsUnboundClient"
 		]
 	},
 	"mixins": [
-		"enchantments-unbound.mixins.json",
-		{
-			"config": "enchantments-unbound.client.mixins.json",
-			"environment": "client"
-		}
+		"enchantments-unbound.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.16.14",
