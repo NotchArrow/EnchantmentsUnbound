@@ -26,6 +26,8 @@ Sharpness VII = 2 Sharpness VI = 4 Sharpness V (3x 39 levels)
 
 Sharpness VIII = 2 Sharpness VII... 8 Sharpness V (7x 39 levels)
 
+You can also customize the max level for every enchantment individually (default: 255)
+
 # Dependencies
 ### 📜 [Fabric API](https://modrinth.com/mod/fabric-api)
 Enchantments Unbound must be installed on the **server-side** (can be singleplayer)
