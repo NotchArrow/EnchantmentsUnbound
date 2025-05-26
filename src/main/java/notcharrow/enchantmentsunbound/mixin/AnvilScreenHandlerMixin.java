@@ -17,6 +17,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Objects;
 import java.util.Set;
 
 @Mixin(AnvilScreenHandler.class)
@@ -92,8 +93,8 @@ public class AnvilScreenHandlerMixin {
 
 		if (!itemStack.isEmpty()) {
 			Set<Object2IntMap.Entry<RegistryEntry<Enchantment>>> itemEnchantments = itemStack.getItem() == Items.ENCHANTED_BOOK
-					? itemStack.getOrDefault(DataComponentTypes.STORED_ENCHANTMENTS, ItemEnchantmentsComponent.DEFAULT).getEnchantmentEntries()
-					: itemStack.getEnchantments().getEnchantmentEntries();
+					? Objects.requireNonNull(itemStack.get(DataComponentTypes.STORED_ENCHANTMENTS)).getEnchantmentEntries()
+					: Objects.requireNonNull(itemStack.get(DataComponentTypes.ENCHANTMENTS)).getEnchantmentEntries();
 
 			for (Object2IntMap.Entry<RegistryEntry<Enchantment>> entry : itemEnchantments) {
 				enchantments.put(entry.getKey(), entry.getIntValue());
