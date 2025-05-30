@@ -10,8 +10,12 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.screen.Property;
+import net.minecraft.text.Text;
+import net.minecraft.util.StringHelper;
 import notcharrow.enchantmentsunbound.config.ConfigManager;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -21,6 +25,8 @@ import java.util.Set;
 
 @Mixin(AnvilScreenHandler.class)
 public class AnvilScreenHandlerMixin {
+
+	@Shadow @Nullable private String newItemName;
 
 	@Inject(method = "updateResult", at = @At("HEAD"), cancellable = true)
 	private void onUpdateResult(CallbackInfo ci) {
@@ -63,7 +69,13 @@ public class AnvilScreenHandlerMixin {
 		}
 
 		if (hasOverleveledEnchants(outputEnchants, leftEnchants, rightEnchants)) {
-			ItemStack output = leftInput.copy();
+			ItemStack output = new ItemStack(leftInput.getItem());
+			String newName = this.newItemName;
+			if (StringHelper.isBlank(newName)) {
+				output.remove(DataComponentTypes.CUSTOM_NAME);
+			} else {
+				output.set(DataComponentTypes.CUSTOM_NAME, Text.literal(newName));
+			}
 			for (Object2IntMap.Entry<RegistryEntry<Enchantment>> entry: outputEnchants.object2IntEntrySet()) {
 				RegistryEntry<Enchantment> enchantment = entry.getKey();
 				output.addEnchantment(enchantment, Math.min(entry.getIntValue(), serverHardCap(entry, enchantment)));
