@@ -189,7 +189,7 @@ public class AnvilScreenHandlerMixin {
 			case "thorns" -> ConfigManager.config.thorns;
 			case "unbreaking" -> ConfigManager.config.unbreaking;
 			case "vanishing_curse" -> ConfigManager.config.vanishing_curse;
-			default -> entry.getKey().value().getMaxLevel();
+			default -> ConfigManager.config.overwriteCustomEnchants ? ConfigManager.config.customEnchantCap : entry.getKey().value().getMaxLevel();
 		};
 	}
 }
