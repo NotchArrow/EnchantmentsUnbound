@@ -68,7 +68,9 @@ public class AnvilScreenHandlerMixin {
 			}
 		}
 
-		if (hasOverleveledEnchants(outputEnchants, leftEnchants, rightEnchants)) {
+		if (hasOverleveledEnchants(outputEnchants, leftEnchants, rightEnchants)
+		|| (((AnvilScreenHandlerAccessorMixin) self).getLevelCost().get() > 39
+		|| ((AnvilScreenHandlerAccessorMixin) self).getLevelCost().get() < 1)) {
 			ItemStack output = new ItemStack(leftInput.getItem());
 			String newName = this.newItemName;
 			if (StringHelper.isBlank(newName)) {
