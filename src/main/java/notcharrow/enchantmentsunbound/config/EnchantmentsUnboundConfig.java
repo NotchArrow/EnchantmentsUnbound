@@ -2,6 +2,8 @@ package notcharrow.enchantmentsunbound.config;
 
 public class EnchantmentsUnboundConfig {
 	public int levelCost = 39;
+	public boolean overwriteCustomEnchants = false;
+	public int customEnchantCap = 255;
 	public int aqua_affinity = 255;
 	public int bane_of_arthropods = 255;
 	public int binding_curse = 255;
