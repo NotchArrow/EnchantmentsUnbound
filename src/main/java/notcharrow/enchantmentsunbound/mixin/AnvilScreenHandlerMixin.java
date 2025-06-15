@@ -10,17 +10,24 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.screen.Property;
+import net.minecraft.text.Text;
+import net.minecraft.util.StringHelper;
 import notcharrow.enchantmentsunbound.config.ConfigManager;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Objects;
 import java.util.Set;
 
 @Mixin(AnvilScreenHandler.class)
 public class AnvilScreenHandlerMixin {
+
+	@Shadow @Nullable private String newItemName;
 
 	@Inject(method = "updateResult", at = @At("HEAD"), cancellable = true)
 	private void onUpdateResult(CallbackInfo ci) {
@@ -63,7 +70,13 @@ public class AnvilScreenHandlerMixin {
 		}
 
 		if (hasOverleveledEnchants(outputEnchants, leftEnchants, rightEnchants)) {
-			ItemStack output = leftInput.copy();
+			ItemStack output = new ItemStack(leftInput.getItem());
+			String newName = this.newItemName;
+			if (StringHelper.isBlank(newName)) {
+				output.remove(DataComponentTypes.CUSTOM_NAME);
+			} else {
+				output.set(DataComponentTypes.CUSTOM_NAME, Text.literal(newName));
+			}
 			for (Object2IntMap.Entry<RegistryEntry<Enchantment>> entry: outputEnchants.object2IntEntrySet()) {
 				RegistryEntry<Enchantment> enchantment = entry.getKey();
 				output.addEnchantment(enchantment, Math.min(entry.getIntValue(), serverHardCap(entry, enchantment)));
@@ -92,8 +105,8 @@ public class AnvilScreenHandlerMixin {
 
 		if (!itemStack.isEmpty()) {
 			Set<Object2IntMap.Entry<RegistryEntry<Enchantment>>> itemEnchantments = itemStack.getItem() == Items.ENCHANTED_BOOK
-					? itemStack.getOrDefault(DataComponentTypes.STORED_ENCHANTMENTS, ItemEnchantmentsComponent.DEFAULT).getEnchantmentEntries()
-					: itemStack.getEnchantments().getEnchantmentEntries();
+					? Objects.requireNonNull(itemStack.get(DataComponentTypes.STORED_ENCHANTMENTS)).getEnchantmentEntries()
+					: Objects.requireNonNull(itemStack.get(DataComponentTypes.ENCHANTMENTS)).getEnchantmentEntries();
 
 			for (Object2IntMap.Entry<RegistryEntry<Enchantment>> entry : itemEnchantments) {
 				enchantments.put(entry.getKey(), entry.getIntValue());
@@ -176,7 +189,7 @@ public class AnvilScreenHandlerMixin {
 			case "thorns" -> ConfigManager.config.thorns;
 			case "unbreaking" -> ConfigManager.config.unbreaking;
 			case "vanishing_curse" -> ConfigManager.config.vanishing_curse;
-			default -> entry.getKey().value().getMaxLevel();
+			default -> ConfigManager.config.overwriteCustomEnchants ? ConfigManager.config.customEnchantCap : entry.getKey().value().getMaxLevel();
 		};
 	}
 }
