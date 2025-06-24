@@ -150,6 +150,9 @@ public class AnvilScreenHandlerMixin {
 
 	@Unique
 	private static int serverHardCap(Object2IntMap.Entry<RegistryEntry<Enchantment>> entry, RegistryEntry<Enchantment> enchantment) {
+		if (!ConfigManager.config.overwriteVanillaEnchants) {
+			return enchantment.value().getMaxLevel();
+		}
 		String enchantmentID = enchantment.getIdAsString();
 		enchantmentID = enchantmentID.replace("minecraft:", "");
 		return switch (enchantmentID) {
