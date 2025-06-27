@@ -72,7 +72,7 @@ public class AnvilScreenHandlerMixin {
 		if (hasOverleveledEnchants(outputEnchants, leftEnchants, rightEnchants)
 		|| (((AnvilScreenHandlerAccessorMixin) self).getLevelCost().get() > 39
 		|| ((AnvilScreenHandlerAccessorMixin) self).getLevelCost().get() < 1)) {
-			ItemStack output = new ItemStack(leftInput.getItem());
+			ItemStack output = leftInput.copy();
 			String newName = this.newItemName;
 			if (StringHelper.isBlank(newName)) {
 				output.remove(DataComponentTypes.CUSTOM_NAME);
@@ -152,6 +152,9 @@ public class AnvilScreenHandlerMixin {
 	private static int serverHardCap(Object2IntMap.Entry<RegistryEntry<Enchantment>> entry, RegistryEntry<Enchantment> enchantment) {
 		if (!ConfigManager.config.overwriteVanillaEnchants) {
 			return enchantment.value().getMaxLevel();
+		}
+		if (ConfigManager.config.useGlobalVanillaCap) {
+			return ConfigManager.config.globalVanillaCap;
 		}
 		String enchantmentID = enchantment.getIdAsString();
 		enchantmentID = enchantmentID.replace("minecraft:", "");

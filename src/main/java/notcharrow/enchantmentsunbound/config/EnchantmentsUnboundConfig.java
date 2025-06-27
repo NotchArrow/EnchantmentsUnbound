@@ -5,6 +5,8 @@ public class EnchantmentsUnboundConfig {
 	public boolean overwriteCustomEnchants = false;
 	public int customEnchantCap = 255;
 	public boolean overwriteVanillaEnchants = true;
+	public boolean useGlobalVanillaCap = false;
+	public int globalVanillaCap = 255;
 	public int aqua_affinity = 255;
 	public int bane_of_arthropods = 255;
 	public int binding_curse = 255;
