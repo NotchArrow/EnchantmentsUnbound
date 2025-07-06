@@ -162,7 +162,9 @@ public class AnvilScreenHandlerMixin {
 			case "bane_of_arthropods" -> ConfigManager.config.bane_of_arthropods;
 			case "binding_curse" -> ConfigManager.config.binding_curse;
 			case "blast_protection" -> ConfigManager.config.blast_protection;
+			case "breach" -> ConfigManager.config.breach;
 			case "channeling" -> ConfigManager.config.channeling;
+			case "density" -> ConfigManager.config.density;
 			case "depth_strider" -> ConfigManager.config.depth_strider;
 			case "efficiency" -> ConfigManager.config.efficiency;
 			case "feather_falling" -> ConfigManager.config.feather_falling;
@@ -193,9 +195,11 @@ public class AnvilScreenHandlerMixin {
 			case "smite" -> ConfigManager.config.smite;
 			case "soul_speed" -> ConfigManager.config.soul_speed;
 			case "sweeping" -> ConfigManager.config.sweeping;
+			case "swift_sneak" -> ConfigManager.config.swift_sneak;
 			case "thorns" -> ConfigManager.config.thorns;
 			case "unbreaking" -> ConfigManager.config.unbreaking;
 			case "vanishing_curse" -> ConfigManager.config.vanishing_curse;
+			case "wind_burst" -> ConfigManager.config.wind_burst;
 			default -> ConfigManager.config.overwriteCustomEnchants ? ConfigManager.config.customEnchantCap : entry.getKey().value().getMaxLevel();
 		};
 	}

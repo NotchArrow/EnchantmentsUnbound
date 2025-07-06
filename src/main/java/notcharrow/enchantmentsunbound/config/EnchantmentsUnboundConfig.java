@@ -11,7 +11,9 @@ public class EnchantmentsUnboundConfig {
 	public int bane_of_arthropods = 255;
 	public int binding_curse = 255;
 	public int blast_protection = 255;
+	public int breach = 255;
 	public int channeling = 255;
+	public int density = 255;
 	public int depth_strider = 255;
 	public int efficiency = 255;
 	public int feather_falling = 255;
@@ -42,7 +44,9 @@ public class EnchantmentsUnboundConfig {
 	public int smite = 255;
 	public int soul_speed = 255;
 	public int sweeping = 255;
+	public int swift_sneak = 255;
 	public int thorns = 255;
 	public int unbreaking = 255;
 	public int vanishing_curse = 255;
+	public int wind_burst = 255;
 }
