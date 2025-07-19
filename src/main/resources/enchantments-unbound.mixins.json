@@ -3,9 +3,9 @@
   "package": "notcharrow.enchantmentsunbound.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "AnvilScreenHandlerAccessorMixin",
     "AnvilScreenHandlerMixin",
-    "EnchantmentMixin"
+    "EnchantmentMixin",
+    "ForgingScreenHandlerAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
