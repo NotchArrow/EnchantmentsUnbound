@@ -9,7 +9,8 @@
 	],
 	"contact": {
 		"homepage": "https://modrinth.com/project/enchantments-unbound",
-		"sources": "https://github.com/NotchArrow/EnchantmentsUnbound/"
+		"sources": "https://github.com/NotchArrow/EnchantmentsUnbound/",
+		"discord": "https://discord.gg/ZCaGkZeb4C"
 	},
 	"license": "MIT",
 	"icon": "assets/enchantments-unbound/icon.png",
@@ -17,6 +18,9 @@
 	"entrypoints": {
 		"main": [
 			"notcharrow.enchantmentsunbound.EnchantmentsUnbound"
+		],
+		"modmenu": [
+			"notcharrow.enchantmentsunbound.EnchantmentsUnboundModMenu"
 		]
 	},
 	"mixins": [
@@ -29,6 +33,7 @@
 		"fabric-api": "*"
 	},
 	"suggests": {
-		"another-mod": "*"
+		"cloth-config": "*",
+		"modmenu": "*"
 	}
 }

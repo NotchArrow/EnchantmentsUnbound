@@ -1,7 +1,9 @@
 package notcharrow.enchantmentsunbound.config;
 
 public class EnchantmentsUnboundConfig {
-	public int levelCost = 39;
+	public boolean staticCost = false;
+	public int levelCost = 50;
+	public int maxLevelCost = 1000;
 	public boolean overwriteCustomEnchants = false;
 	public int customEnchantCap = 255;
 	public boolean overwriteVanillaEnchants = true;
