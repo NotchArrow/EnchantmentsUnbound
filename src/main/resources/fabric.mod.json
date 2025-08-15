@@ -17,10 +17,10 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"notcharrow.enchantmentsunbound.EnchantmentsUnbound"
+          "com.notcharrow.enchantmentsunbound.EnchantmentsUnbound"
 		],
 		"modmenu": [
-			"notcharrow.enchantmentsunbound.EnchantmentsUnboundModMenu"
+          "com.notcharrow.enchantmentsunbound.EnchantmentsUnboundModMenu"
 		]
 	},
 	"mixins": [

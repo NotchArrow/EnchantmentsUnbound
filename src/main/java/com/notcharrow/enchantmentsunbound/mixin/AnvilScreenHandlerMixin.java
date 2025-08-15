@@ -1,4 +1,4 @@
-package notcharrow.enchantmentsunbound.mixin;
+package com.notcharrow.enchantmentsunbound.mixin;
 
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -11,9 +11,9 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.screen.Property;
-import notcharrow.enchantmentsunbound.config.ConfigManager;
-import notcharrow.enchantmentsunbound.helper.AnvilScreenHandlerPlayerAccess;
-import notcharrow.enchantmentsunbound.helper.TextFormat;
+import com.notcharrow.enchantmentsunbound.config.ConfigManager;
+import com.notcharrow.enchantmentsunbound.helper.AnvilScreenHandlerPlayerAccess;
+import com.notcharrow.enchantmentsunbound.helper.TextFormat;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -25,7 +25,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static notcharrow.enchantmentsunbound.helper.UnboundHelper.*;
+import static com.notcharrow.enchantmentsunbound.helper.UnboundHelper.*;
 
 @Mixin(AnvilScreenHandler.class)
 public class AnvilScreenHandlerMixin {

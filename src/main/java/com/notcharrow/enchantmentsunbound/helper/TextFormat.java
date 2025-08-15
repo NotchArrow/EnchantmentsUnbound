@@ -1,4 +1,4 @@
-package notcharrow.enchantmentsunbound.helper;
+package com.notcharrow.enchantmentsunbound.helper;
 
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;

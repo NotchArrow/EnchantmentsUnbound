@@ -1,4 +1,4 @@
-package notcharrow.enchantmentsunbound.helper;
+package com.notcharrow.enchantmentsunbound.helper;
 
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.component.DataComponentTypes;
@@ -8,8 +8,10 @@ import net.minecraft.item.Items;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.StringHelper;
-import notcharrow.enchantmentsunbound.config.ConfigManager;
+import com.notcharrow.enchantmentsunbound.config.ConfigManager;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
 
@@ -131,7 +133,7 @@ public class UnboundHelper {
 			case "silk_touch" -> ConfigManager.config.silk_touch;
 			case "smite" -> ConfigManager.config.smite;
 			case "soul_speed" -> ConfigManager.config.soul_speed;
-			case "sweeping" -> ConfigManager.config.sweeping;
+			case "sweeping_edge" -> ConfigManager.config.sweeping;
 			case "swift_sneak" -> ConfigManager.config.swift_sneak;
 			case "thorns" -> ConfigManager.config.thorns;
 			case "unbreaking" -> ConfigManager.config.unbreaking;

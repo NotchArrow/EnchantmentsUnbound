@@ -1,4 +1,4 @@
-package notcharrow.enchantmentsunbound.helper;
+package com.notcharrow.enchantmentsunbound.helper;
 
 import net.minecraft.entity.player.PlayerEntity;
 
