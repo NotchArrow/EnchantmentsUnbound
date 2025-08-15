@@ -1,4 +1,4 @@
-package notcharrow.enchantmentsunbound.config;
+package com.notcharrow.enchantmentsunbound.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

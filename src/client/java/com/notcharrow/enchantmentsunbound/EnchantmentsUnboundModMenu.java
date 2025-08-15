@@ -1,4 +1,4 @@
-package notcharrow.enchantmentsunbound;
+package com.notcharrow.enchantmentsunbound;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
@@ -6,7 +6,7 @@ import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
-import notcharrow.enchantmentsunbound.config.ConfigManager;
+import com.notcharrow.enchantmentsunbound.config.ConfigManager;
 
 import java.util.function.Consumer;
 

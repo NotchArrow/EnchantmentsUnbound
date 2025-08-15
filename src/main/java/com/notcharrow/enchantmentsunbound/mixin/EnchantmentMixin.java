@@ -1,4 +1,4 @@
-package notcharrow.enchantmentsunbound.mixin;
+package com.notcharrow.enchantmentsunbound.mixin;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.registry.entry.RegistryEntry;

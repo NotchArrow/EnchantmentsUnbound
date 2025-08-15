@@ -1,4 +1,4 @@
-package notcharrow.enchantmentsunbound.config;
+package com.notcharrow.enchantmentsunbound.config;
 
 public class EnchantmentsUnboundConfig {
 	public boolean staticCost = false;
