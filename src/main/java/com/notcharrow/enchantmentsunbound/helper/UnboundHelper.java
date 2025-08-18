@@ -1,5 +1,6 @@
 package com.notcharrow.enchantmentsunbound.helper;
 
+import com.notcharrow.enchantmentsunbound.config.ConfigManager;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.enchantment.Enchantment;
@@ -8,10 +9,7 @@ import net.minecraft.item.Items;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.StringHelper;
-import com.notcharrow.enchantmentsunbound.config.ConfigManager;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
 
