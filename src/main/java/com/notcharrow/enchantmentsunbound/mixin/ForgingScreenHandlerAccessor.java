@@ -1,8 +1,8 @@
 package com.notcharrow.enchantmentsunbound.mixin;
 
+import com.notcharrow.enchantmentsunbound.helper.AnvilScreenHandlerPlayerAccess;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.screen.ForgingScreenHandler;
-import com.notcharrow.enchantmentsunbound.helper.AnvilScreenHandlerPlayerAccess;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 

@@ -7,9 +7,16 @@ import net.minecraft.util.Formatting;
 
 public class TextFormat {
 	public static Text styledText(String message) {
-		MutableText styledText = Text.literal(message);
-		Style textStyle = Style.EMPTY.withItalic(true).withColor(Formatting.GREEN);
+		String[] messageParts = message.split(":");
+		MutableText styledText = Text.literal(messageParts[0] + ":");
+		Style textStyle = Style.EMPTY.withBold(true).withColor(Formatting.GOLD);
 		styledText.setStyle(textStyle);
+
+		MutableText styledNumber = Text.literal(messageParts[1]);
+		textStyle = Style.EMPTY.withBold(true).withColor(Formatting.LIGHT_PURPLE);
+		styledNumber.setStyle(textStyle);
+
+		styledText.append(styledNumber);
 		return styledText;
 	}
 }

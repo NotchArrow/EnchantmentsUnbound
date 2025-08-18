@@ -1,24 +1,20 @@
 package com.notcharrow.enchantmentsunbound.mixin;
 
+import com.notcharrow.enchantmentsunbound.config.ConfigManager;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.screen.Property;
-import com.notcharrow.enchantmentsunbound.config.ConfigManager;
-import com.notcharrow.enchantmentsunbound.helper.AnvilScreenHandlerPlayerAccess;
-import com.notcharrow.enchantmentsunbound.helper.TextFormat;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -32,7 +28,6 @@ public class AnvilScreenHandlerMixin {
 
 	@Shadow @Final private Property levelCost;
 	@Shadow @Nullable private String newItemName;
-	@Unique private long lastNotifTime = 0;
 
 	@Inject(method = "updateResult", at = @At("TAIL"))
 	private void onUpdateResult(CallbackInfo ci) {
@@ -83,21 +78,13 @@ public class AnvilScreenHandlerMixin {
 			self.getSlot(2).setStack(output);
 			int currentRepairCost = leftInput.getOrDefault(DataComponentTypes.REPAIR_COST, 0);
 			int newRepairCost = AnvilScreenHandler.getNextCost(currentRepairCost);
+			// System.out.println(currentRepairCost + " " + newRepairCost);
 			output.set(DataComponentTypes.REPAIR_COST, newRepairCost);
 
 			if (ConfigManager.config.staticCost) {
 				levelCost.set(Math.max(ConfigManager.config.levelCost, 1));
 			}
 			levelCost.set(Math.min(ConfigManager.config.maxLevelCost, levelCost.get()));
-
-			if (System.currentTimeMillis() - lastNotifTime > 1000) {
-				lastNotifTime = System.currentTimeMillis();
-				PlayerEntity player = ((AnvilScreenHandlerPlayerAccess) this).getPlayer();
-				if (levelCost.get() > 39) {
-					player.sendMessage(TextFormat.styledText("\n[EnchantmentsUnbound] This will cost: " + levelCost.get() + " levels"), false);
-					player.sendMessage(TextFormat.styledText("[EnchantmentsUnbound] It says Too Expensive, but you can still take the item!\n"), false);
-				}
-			}
 		}
 	}
 
