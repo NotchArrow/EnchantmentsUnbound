@@ -28,37 +28,6 @@ public class UnboundHelper {
 		}
 	}
 
-	public static boolean hasOverleveledEnchants(Object2IntMap<RegistryEntry<Enchantment>> outputEnchants,
-												 Object2IntMap<RegistryEntry<Enchantment>> leftEnchants,
-												 Object2IntMap<RegistryEntry<Enchantment>> rightEnchants) {
-		boolean overleveled = false;
-		for (Object2IntMap.Entry<RegistryEntry<Enchantment>> entry : outputEnchants.object2IntEntrySet()) {
-			Enchantment enchantment = entry.getKey().value();
-			int level = entry.getIntValue();
-			if (level > enchantment.getMaxLevel()) {
-				overleveled = true;
-				break;
-			}
-		}
-		for (Object2IntMap.Entry<RegistryEntry<Enchantment>> entry : leftEnchants.object2IntEntrySet()) {
-			Enchantment enchantment = entry.getKey().value();
-			int level = entry.getIntValue();
-			if (level > enchantment.getMaxLevel()) {
-				overleveled = true;
-				break;
-			}
-		}
-		for (Object2IntMap.Entry<RegistryEntry<Enchantment>> entry : rightEnchants.object2IntEntrySet()) {
-			Enchantment enchantment = entry.getKey().value();
-			int level = entry.getIntValue();
-			if (level > enchantment.getMaxLevel()) {
-				overleveled = true;
-				break;
-			}
-		}
-		return overleveled;
-	}
-
 	public static ItemStack createOutput(Object2IntMap<RegistryEntry<Enchantment>> outputEnchants,
 										 Object2IntMap<RegistryEntry<Enchantment>> leftEnchants,
 										 Object2IntMap<RegistryEntry<Enchantment>> rightEnchants,

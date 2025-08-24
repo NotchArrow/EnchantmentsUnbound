@@ -14,6 +14,7 @@ import net.minecraft.screen.Property;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
@@ -69,23 +70,17 @@ public class AnvilScreenHandlerMixin {
 			}
 		}
 
-		if (hasOverleveledEnchants(outputEnchants, leftEnchants, rightEnchants)
-		|| levelCost.get() > 39
-		|| levelCost.get() < 1) {
+		ItemStack output = createOutput(outputEnchants, leftEnchants, rightEnchants, leftInput, this.newItemName);
 
-			ItemStack output = createOutput(outputEnchants, leftEnchants, rightEnchants, leftInput, this.newItemName);
+		self.getSlot(2).setStack(output);
+		int currentRepairCost = leftInput.getOrDefault(DataComponentTypes.REPAIR_COST, 0);
+		int newRepairCost = AnvilScreenHandler.getNextCost(currentRepairCost);
+		output.set(DataComponentTypes.REPAIR_COST, newRepairCost);
 
-			self.getSlot(2).setStack(output);
-			int currentRepairCost = leftInput.getOrDefault(DataComponentTypes.REPAIR_COST, 0);
-			int newRepairCost = AnvilScreenHandler.getNextCost(currentRepairCost);
-			// System.out.println(currentRepairCost + " " + newRepairCost);
-			output.set(DataComponentTypes.REPAIR_COST, newRepairCost);
-
-			if (ConfigManager.config.staticCost) {
-				levelCost.set(Math.max(ConfigManager.config.levelCost, 1));
-			}
-			levelCost.set(Math.min(ConfigManager.config.maxLevelCost, levelCost.get()));
+		if (ConfigManager.config.staticCost) {
+			levelCost.set(Math.max(ConfigManager.config.levelCost, 1));
 		}
+		levelCost.set(Math.min(ConfigManager.config.maxLevelCost, levelCost.get()));
 	}
 
 	@ModifyConstant(
@@ -94,5 +89,14 @@ public class AnvilScreenHandlerMixin {
 	)
 	private int raiseTooExpensiveLimit(int original) {
 		return Integer.MAX_VALUE;
+	}
+
+	/**
+	 * @author NotchArrow
+	 * @reason Allowing customization of vanilla scaling to better fit the needs of users
+	 */
+	@Overwrite
+	public static int getNextCost(int cost) {
+		return (int) Math.min((long) (cost * ConfigManager.config.levelCostScalingMultiplier + 1), 2147483647L);
 	}
 }

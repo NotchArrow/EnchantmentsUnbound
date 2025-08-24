@@ -4,6 +4,7 @@ public class EnchantmentsUnboundConfig {
 	public boolean staticCost = false;
 	public int levelCost = 50;
 	public int maxLevelCost = 1000;
+	public double levelCostScalingMultiplier = 2.0;
 	public boolean overwriteCustomEnchants = false;
 	public int customEnchantCap = 255;
 	public boolean overwriteVanillaEnchants = true;

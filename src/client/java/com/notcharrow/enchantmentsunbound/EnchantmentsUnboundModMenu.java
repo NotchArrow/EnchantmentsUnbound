@@ -32,6 +32,12 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 				value -> ConfigManager.config.levelCost = value,
 				1, Integer.MAX_VALUE);
 
+		addDoubleField(general, "Scaling Cost Multiplier", "The multiplier to increase the level cost by each transaction " +
+						"(vanilla default: 2.0)",
+				ConfigManager.config.levelCostScalingMultiplier,
+				value -> ConfigManager.config.levelCostScalingMultiplier = value,
+				1, Integer.MAX_VALUE);
+
 		addIntField(general, "Max Level Cost", "The maximum amount of levels that a transaction can cost",
 				ConfigManager.config.maxLevelCost,
 				value -> ConfigManager.config.maxLevelCost = value,
@@ -248,6 +254,21 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 	private void addIntField(ConfigCategory category, String label, String tooltip, int currentValue, Consumer<Integer> onSave, int min, int max) {
 		category.addEntry(
 				ConfigBuilder.create().entryBuilder().startIntField(Text.of(label), currentValue)
+						.setTooltip(Text.of(tooltip))
+						.setDefaultValue(currentValue)
+						.setSaveConsumer(newValue -> {
+							if (newValue < min) newValue = min;
+							if (newValue > max) newValue = max;
+							onSave.accept(newValue);
+							ConfigManager.saveConfig();
+						})
+						.build()
+		);
+	}
+
+	private void addDoubleField(ConfigCategory category, String label, String tooltip, double currentValue, Consumer<Double> onSave, double min, double max) {
+		category.addEntry(
+				ConfigBuilder.create().entryBuilder().startDoubleField(Text.of(label), currentValue)
 						.setTooltip(Text.of(tooltip))
 						.setDefaultValue(currentValue)
 						.setSaveConsumer(newValue -> {
