@@ -3,7 +3,7 @@
 	"id": "enchantments-unbound",
 	"version": "${version}",
 	"name": "Enchantments Unbound",
-	"description": "Uncapped Enchantment Levels in the Anvil and No Enchantment Conflicts",
+	"description": "Uncapped enchantment levels in the anvil, no too expensive, and no enchantment conflicts.",
 	"authors": [
 		"NotchArrow"
 	],
