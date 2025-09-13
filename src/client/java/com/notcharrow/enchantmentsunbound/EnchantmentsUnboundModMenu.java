@@ -43,6 +43,10 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 				value -> ConfigManager.config.maxLevelCost = value,
 				1, Integer.MAX_VALUE);
 
+		addBoolean(general, "Actionbar Cost Display", "Should the level cost of transactions display above the hotbar",
+				ConfigManager.config.showActionbarMessage,
+				value -> ConfigManager.config.showActionbarMessage = value);
+
 		addBoolean(general, "Overwrite Vanilla Enchants", "Overwrite vanilla enchantment max levels",
 				ConfigManager.config.overwriteVanillaEnchants,
 				value -> ConfigManager.config.overwriteVanillaEnchants = value);
@@ -237,6 +241,37 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 				ConfigManager.config.wind_burst,
 				value -> ConfigManager.config.wind_burst = value,
 				1, 255);
+
+
+		ConfigCategory conflicts = builder.getOrCreateCategory(Text.of("Enchant Conflicts"));
+
+		addBoolean(conflicts, "Damage Enchants No Conflict", "Sharpness, Smite, and Bane of Arthropods aren't exclusive",
+				ConfigManager.config.damageConflicts,
+				value -> ConfigManager.config.damageConflicts = value);
+
+		addBoolean(conflicts, "Protection Enchants No Conflict", "Protection, Blast, Projectile, and Fire Protection aren't exclusive",
+				ConfigManager.config.protectionConflicts,
+				value -> ConfigManager.config.protectionConflicts = value);
+
+		addBoolean(conflicts, "Boot Enchants No Conflict", "Depth Strider and Frost Walker aren't exclusive",
+				ConfigManager.config.bootConflicts,
+				value -> ConfigManager.config.bootConflicts = value);
+
+		addBoolean(conflicts, "Bow Enchants No Conflict", "Infinity and Mending aren't exclusive",
+				ConfigManager.config.bowConflicts,
+				value -> ConfigManager.config.bowConflicts = value);
+
+		addBoolean(conflicts, "Trident Enchants No Conflict", "Riptide doesn't conflict with Channeling and Loyalty",
+				ConfigManager.config.tridentConflicts,
+				value -> ConfigManager.config.tridentConflicts = value);
+
+		addBoolean(conflicts, "Crossbow Enchants No Conflict", "Multishot and Piercing aren't exclusive",
+				ConfigManager.config.crossbowConflicts,
+				value -> ConfigManager.config.crossbowConflicts = value);
+
+		addBoolean(conflicts, "Tool Enchants No Conflict", "Silk Touch and Fortune aren't exclusive",
+				ConfigManager.config.toolConflicts,
+				value -> ConfigManager.config.toolConflicts = value);
 
 		return builder.build();
 	}
