@@ -24,7 +24,11 @@
 		]
 	},
 	"mixins": [
-		"enchantments-unbound.mixins.json"
+		"enchantments-unbound.mixins.json",
+        {
+          "config": "enchantments-unbound-client.mixins.json",
+          "environment": "client"
+        }
 	],
 	"depends": {
 		"fabricloader": ">=0.16.10",

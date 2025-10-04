@@ -3,6 +3,7 @@ package com.notcharrow.enchantmentsunbound.helper;
 import com.notcharrow.enchantmentsunbound.config.ConfigManager;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import net.fabricmc.fabric.api.item.v1.EnchantingContext;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.ItemStack;
@@ -52,7 +53,6 @@ public class UnboundHelper {
 		combined.putAll(rightEnchants);
 		combined.putAll(outputEnchants);
 
-		// Filter conflicts according to group-based toggles
 		List<RegistryEntry<Enchantment>> toRemove = new ArrayList<>();
 		List<RegistryEntry<Enchantment>> enchants = new ArrayList<>(combined.keySet());
 
@@ -67,15 +67,16 @@ public class UnboundHelper {
 			}
 		}
 
-		// Remove conflicting enchantments
 		for (RegistryEntry<Enchantment> rem : toRemove) {
 			combined.remove(rem);
 		}
 
-		// Apply remaining enchantments to output stack
 		for (Object2IntMap.Entry<RegistryEntry<Enchantment>> entry: combined.object2IntEntrySet()) {
 			RegistryEntry<Enchantment> enchantment = entry.getKey();
-			output.addEnchantment(enchantment, Math.min(entry.getIntValue(), serverHardCap(entry, enchantment)));
+			if (!ConfigManager.config.itemEnchantConflicts || output.canBeEnchantedWith(enchantment, EnchantingContext.ACCEPTABLE)
+			|| output.getItem() == Items.ENCHANTED_BOOK) {
+				output.addEnchantment(enchantment, Math.min(entry.getIntValue(), serverHardCap(entry, enchantment)));
+			}
 		}
 
 		return output;

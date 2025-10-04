@@ -13,6 +13,7 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.screen.Property;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.Nullable;
@@ -20,11 +21,9 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +44,13 @@ public class AnvilScreenHandlerMixin {
 		ItemStack leftInput = self.getSlot(0).getStack();
 		ItemStack rightInput = self.getSlot(1).getStack();
 
-		if (leftInput.isEmpty() || rightInput.isEmpty()) {
+		if (leftInput.isEmpty()) {
+			return;
+		}
+		if (rightInput.isEmpty()) {
+			if (ConfigManager.config.lowRenamingCost) {
+				levelCost.set(1);
+			}
 			return;
 		}
 
@@ -90,16 +95,16 @@ public class AnvilScreenHandlerMixin {
 		}
 		levelCost.set(Math.min(ConfigManager.config.maxLevelCost, levelCost.get()));
 
-		LoreComponent existingLore = output.get(DataComponentTypes.LORE);
-		List<Text> lore = new ArrayList<>();
-		if (existingLore != null) {
-			lore.addAll(existingLore.lines());
-		}
-		if (levelCost.get() > 39) {
+		if (levelCost.get() > 39 && ConfigManager.config.showTooltipMessage) {
+			LoreComponent existingLore = output.get(DataComponentTypes.LORE);
+			List<Text> lore = new ArrayList<>();
+			if (existingLore != null) {
+				lore.addAll(existingLore.lines());
+			}
 			lore.add(Text.literal("Level Cost: " + levelCost.get() + " levels.").formatted(Formatting.GREEN));
 			lore.add(Text.literal("You can still take the output!").formatted(Formatting.GREEN));
+			output.set(DataComponentTypes.LORE, new LoreComponent(lore));
 		}
-		output.set(DataComponentTypes.LORE, new LoreComponent(lore));
 	}
 
 	@Inject(method = "onTakeOutput", at = @At("HEAD"))
@@ -126,6 +131,18 @@ public class AnvilScreenHandlerMixin {
 		return Integer.MAX_VALUE;
 	}
 
+	@ModifyVariable(
+			method = "updateResult",
+			at = @At(
+					value = "STORE",
+					ordinal = 0
+			),
+			name = "bl4"
+	)
+	private boolean overrideAcceptable(boolean original) {
+		return true;
+	}
+
 	/**
 	 * @author NotchArrow
 	 * @reason Allowing customization of vanilla scaling to better fit the needs of users
@@ -133,5 +150,44 @@ public class AnvilScreenHandlerMixin {
 	@Overwrite
 	public static int getNextCost(int cost) {
 		return (int) Math.min((long) (cost * ConfigManager.config.levelCostScalingMultiplier + 1), 2147483647L);
+	}
+
+	@Inject(method = "setNewItemName", at = @At("TAIL"))
+	public void setNewItemName(String newItemName, CallbackInfoReturnable<Boolean> cir) {
+		if (ConfigManager.config.colorCodedRenaming && newItemName.contains("&")) {
+
+			// https://minecraft.wiki/w/Formatting_codes
+
+			MutableText nameText = Text.literal("");
+
+			List<Formatting> activeFormats = new ArrayList<>();
+			for (int i = 0; i < newItemName.length(); i++) {
+				char c = newItemName.charAt(i);
+
+				// detect format code
+				if (c == '&' && i + 1 < newItemName.length()) {
+					char codeChar = newItemName.charAt(i + 1);
+					Formatting fmt = Formatting.byCode(codeChar);
+					if (fmt != null) {
+						activeFormats.add(fmt);
+					}
+					i++; // skip char code
+					continue;
+				}
+
+				MutableText charText = Text.literal(String.valueOf(c));
+				for (Formatting fmt : activeFormats) {
+					charText = charText.formatted(fmt);
+				}
+
+				nameText.append(charText);
+			}
+
+			AnvilScreenHandler anvil = ((AnvilScreenHandler) (Object) this);
+			ItemStack itemStack = anvil.getSlot(2).getStack();
+			itemStack.set(DataComponentTypes.CUSTOM_NAME, nameText);
+			anvil.setStackInSlot(2, 1, itemStack);
+		}
+
 	}
 }
