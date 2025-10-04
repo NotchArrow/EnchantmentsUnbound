@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "com.notcharrow.enchantmentsunbound.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "AnvilScreenMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

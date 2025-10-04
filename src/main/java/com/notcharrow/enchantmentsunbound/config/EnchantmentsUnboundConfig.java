@@ -5,7 +5,6 @@ public class EnchantmentsUnboundConfig {
 	public int levelCost = 50;
 	public int maxLevelCost = 1000;
 	public double levelCostScalingMultiplier = 2.0;
-	public boolean showActionbarMessage = true;
 
 	public boolean overwriteCustomEnchants = false;
 	public int customEnchantCap = 255;
@@ -58,10 +57,15 @@ public class EnchantmentsUnboundConfig {
 
 	public boolean damageConflicts = true;
 	public boolean protectionConflicts = true;
-	public boolean bootConflicts = true;
 	public boolean bowConflicts = true;
-	public boolean tridentConflicts = true;
-	public boolean crossbowConflicts = true;
-	public boolean toolConflicts = true;
+	public boolean bootConflicts = false;
+	public boolean tridentConflicts = false;
+	public boolean crossbowConflicts = false;
+	public boolean toolConflicts = false;
 
+	public boolean itemEnchantConflicts = true;
+	public boolean colorCodedRenaming = false;
+	public boolean lowRenamingCost = true;
+	public boolean showActionbarMessage = false;
+	public boolean showTooltipMessage = true;
 }

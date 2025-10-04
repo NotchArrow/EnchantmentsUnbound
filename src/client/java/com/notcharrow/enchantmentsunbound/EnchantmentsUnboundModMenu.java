@@ -43,10 +43,6 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 				value -> ConfigManager.config.maxLevelCost = value,
 				1, Integer.MAX_VALUE);
 
-		addBoolean(general, "Actionbar Cost Display", "Should the level cost of transactions display above the hotbar",
-				ConfigManager.config.showActionbarMessage,
-				value -> ConfigManager.config.showActionbarMessage = value);
-
 		addBoolean(general, "Overwrite Vanilla Enchants", "Overwrite vanilla enchantment max levels",
 				ConfigManager.config.overwriteVanillaEnchants,
 				value -> ConfigManager.config.overwriteVanillaEnchants = value);
@@ -253,13 +249,13 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 				ConfigManager.config.protectionConflicts,
 				value -> ConfigManager.config.protectionConflicts = value);
 
-		addBoolean(conflicts, "Boot Enchants No Conflict", "Depth Strider and Frost Walker aren't exclusive",
-				ConfigManager.config.bootConflicts,
-				value -> ConfigManager.config.bootConflicts = value);
-
 		addBoolean(conflicts, "Bow Enchants No Conflict", "Infinity and Mending aren't exclusive",
 				ConfigManager.config.bowConflicts,
 				value -> ConfigManager.config.bowConflicts = value);
+
+		addBoolean(conflicts, "Boot Enchants No Conflict", "Depth Strider and Frost Walker aren't exclusive",
+				ConfigManager.config.bootConflicts,
+				value -> ConfigManager.config.bootConflicts = value);
 
 		addBoolean(conflicts, "Trident Enchants No Conflict", "Riptide doesn't conflict with Channeling and Loyalty",
 				ConfigManager.config.tridentConflicts,
@@ -272,6 +268,29 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 		addBoolean(conflicts, "Tool Enchants No Conflict", "Silk Touch and Fortune aren't exclusive",
 				ConfigManager.config.toolConflicts,
 				value -> ConfigManager.config.toolConflicts = value);
+
+
+		ConfigCategory misc = builder.getOrCreateCategory(Text.of("Other Settings"));
+
+		addBoolean(misc, "Enchantment Exclusivity", "Only allow tool enchantments on tools, armor enchantments on armor, etc.",
+				ConfigManager.config.itemEnchantConflicts,
+				value -> ConfigManager.config.itemEnchantConflicts = value);
+
+		addBoolean(misc, "Color Codes in Anvil Renaming", "Allow item names to use color codes using the '&' symbol",
+				ConfigManager.config.colorCodedRenaming,
+				value -> ConfigManager.config.colorCodedRenaming = value);
+
+		addBoolean(misc, "1 Level Renaming Cost", "Cap item renaming cost at 1 experience level",
+				ConfigManager.config.lowRenamingCost,
+				value -> ConfigManager.config.lowRenamingCost = value);
+
+		addBoolean(misc, "Actionbar Cost Display", "Should the level cost of transactions display above the hotbar",
+				ConfigManager.config.showActionbarMessage,
+				value -> ConfigManager.config.showActionbarMessage = value);
+
+		addBoolean(misc, "Tooltip Cost Display", "Should the level cost of transactions display in the item tooltip when above 39",
+				ConfigManager.config.showTooltipMessage,
+				value -> ConfigManager.config.showTooltipMessage = value);
 
 		return builder.build();
 	}
