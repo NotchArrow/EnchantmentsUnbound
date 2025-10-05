@@ -64,7 +64,7 @@ public class EnchantmentsUnboundConfig {
 	public boolean toolConflicts = false;
 
 	public boolean itemEnchantConflicts = true;
-	public boolean colorCodedRenaming = false;
+	public boolean colorCodedRenaming = true;
 	public boolean lowRenamingCost = true;
 	public boolean showActionbarMessage = false;
 	public boolean showTooltipMessage = true;
