@@ -15,8 +15,8 @@ public class AnvilScreenMixin {
 	@Shadow @Final @Mutable private static Text TOO_EXPENSIVE_TEXT;
 	@Shadow @Final private PlayerEntity player;
 
-	@Inject(method = "handledScreenTick", at = @At("TAIL"))
-	private void handledScreenTick(CallbackInfo ci) {
+	@Inject(method = "onSlotUpdate", at = @At("TAIL"))
+	private void tick(CallbackInfo ci) {
 
 	AnvilScreen screen = ((AnvilScreen) (Object) this);
 	int levelCost = screen.getScreenHandler().getLevelCost();
