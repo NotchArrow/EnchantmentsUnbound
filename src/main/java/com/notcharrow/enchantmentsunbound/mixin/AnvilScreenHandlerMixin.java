@@ -133,13 +133,10 @@ public class AnvilScreenHandlerMixin {
 
 	@ModifyVariable(
 			method = "updateResult",
-			at = @At(
-					value = "STORE",
-					ordinal = 0
-			),
-			name = "bl4"
+			at = @At(value = "STORE", ordinal = 0), // bl4 = enchantment.isAcceptableItem()
+			ordinal = 0
 	)
-	private boolean overrideAcceptable(boolean original) {
+	private boolean alwaysTrue(boolean bl4) {
 		return true;
 	}
 
