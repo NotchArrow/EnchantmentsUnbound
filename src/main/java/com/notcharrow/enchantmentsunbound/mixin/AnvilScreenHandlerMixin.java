@@ -1,18 +1,22 @@
 package com.notcharrow.enchantmentsunbound.mixin;
 
 import com.notcharrow.enchantmentsunbound.config.ConfigManager;
+import com.notcharrow.enchantmentsunbound.helper.AnvilScreenHandlerPlayerAccess;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.thrown.ExperienceBottleEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.screen.Property;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -101,8 +105,12 @@ public class AnvilScreenHandlerMixin {
 			if (existingLore != null) {
 				lore.addAll(existingLore.lines());
 			}
-			lore.add(Text.literal("Level Cost: " + levelCost.get() + " levels.").formatted(Formatting.GREEN));
-			lore.add(Text.literal("You can still take the output!").formatted(Formatting.GREEN));
+			if (((AnvilScreenHandlerPlayerAccess) self).getPlayer().experienceLevel >= levelCost.get()) {
+				lore.add(Text.literal("Level Cost: " + levelCost.get() + " levels.").formatted(Formatting.GREEN));
+				lore.add(Text.literal("You can still take the output!").formatted(Formatting.GREEN));
+			} else {
+				lore.add(Text.literal("Level Cost: " + levelCost.get() + " levels.").formatted(Formatting.RED));
+			}
 			output.set(DataComponentTypes.LORE, new LoreComponent(lore));
 		}
 	}
@@ -121,6 +129,53 @@ public class AnvilScreenHandlerMixin {
 		}
 		stack.remove(DataComponentTypes.LORE);
 		stack.set(DataComponentTypes.LORE, new LoreComponent(lore));
+		/*
+		player.getEntityWorld().playSound(null, player.getX(), player.getY(), player.getZ(),
+				SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1.0F, 1.5F);
+		ci.cancel();
+		// Reimplement logic, potential to add infinite anvil durability :O along with fancy sounds/effects etc...
+		/*
+		if (!player.isInCreativeMode()) {
+            player.addExperienceLevels(-this.levelCost.get());
+        }
+
+        if (this.repairItemUsage > 0) {
+            ItemStack itemStack = this.input.getStack(1);
+            if (!itemStack.isEmpty() && itemStack.getCount() > this.repairItemUsage) {
+                itemStack.decrement(this.repairItemUsage);
+                this.input.setStack(1, itemStack);
+            } else {
+                this.input.setStack(1, ItemStack.EMPTY);
+            }
+        } else if (!this.keepSecondSlot) {
+            this.input.setStack(1, ItemStack.EMPTY);
+        }
+
+        this.levelCost.set(0);
+        if (player instanceof ServerPlayerEntity serverPlayerEntity) {
+            if (!StringHelper.isBlank(this.newItemName) && !this.input.getStack(0).getName().getString().equals(this.newItemName)) {
+                serverPlayerEntity.getTextStream().filterText(this.newItemName);
+            }
+        }
+
+        this.input.setStack(0, ItemStack.EMPTY);
+        this.context.run((world, pos) -> {
+            BlockState blockState = world.getBlockState(pos);
+            if (!player.isInCreativeMode() && blockState.isIn(BlockTags.ANVIL) && player.getRandom().nextFloat() < 0.12F) {
+                BlockState blockState2 = AnvilBlock.getLandingState(blockState);
+                if (blockState2 == null) {
+                    world.removeBlock(pos, false);
+                    world.syncWorldEvent(1029, pos, 0);
+                } else {
+                    world.setBlockState(pos, blockState2, 2);
+                    world.syncWorldEvent(1030, pos, 0);
+                }
+            } else {
+                world.syncWorldEvent(1030, pos, 0);
+            }
+
+        });
+		 */
 	}
 
 	@ModifyConstant(
