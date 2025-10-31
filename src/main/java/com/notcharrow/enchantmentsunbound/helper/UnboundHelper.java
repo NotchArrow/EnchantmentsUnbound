@@ -6,9 +6,12 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.fabricmc.fabric.api.item.v1.EnchantingContext;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.tag.EnchantmentTags;
 import net.minecraft.text.Text;
 import net.minecraft.util.StringHelper;
 
@@ -40,6 +43,8 @@ public class UnboundHelper {
 			String newName
 	) {
 		ItemStack output = leftInput.copy();
+		EnchantmentHelper.apply(output, (components) ->
+				components.remove((enchantment) -> true));
 
 		if (StringHelper.isBlank(newName)) {
 			output.remove(DataComponentTypes.CUSTOM_NAME);
