@@ -2,11 +2,14 @@ package com.notcharrow.enchantmentsunbound.mixin;
 
 import com.notcharrow.enchantmentsunbound.config.ConfigManager;
 import com.notcharrow.enchantmentsunbound.helper.AnvilScreenHandlerPlayerAccess;
+import com.notcharrow.enchantmentsunbound.helper.UnboundHelper;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import net.fabricmc.fabric.api.item.v1.EnchantingContext;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.thrown.ExperienceBottleEntity;
 import net.minecraft.item.ItemStack;
@@ -32,8 +35,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.notcharrow.enchantmentsunbound.helper.UnboundHelper.createOutput;
-import static com.notcharrow.enchantmentsunbound.helper.UnboundHelper.getEnchantments;
+import static com.notcharrow.enchantmentsunbound.helper.UnboundHelper.*;
 
 @Mixin(AnvilScreenHandler.class)
 public class AnvilScreenHandlerMixin {
@@ -96,6 +98,23 @@ public class AnvilScreenHandlerMixin {
 
 		if (ConfigManager.config.staticCost) {
 			levelCost.set(Math.max(ConfigManager.config.levelCost, 1));
+
+			/*
+			TODO - finish configuration for new cost scaling (implement logic below, modmenu, xp config info commands)
+			TODO - finish configuration commands in general for cost and misc settings
+			TODO - test configs on servers and in real launcher
+			 */
+
+		} else if (ConfigManager.config.useXpPerEnchantLevel) {
+			int newCost = 0;
+			for (Object2IntMap.Entry<RegistryEntry<Enchantment>> entry: combined.object2IntEntrySet()) {
+				RegistryEntry<Enchantment> enchantment = entry.getKey();
+				if (!ConfigManager.config.itemEnchantConflicts || output.canBeEnchantedWith(enchantment, EnchantingContext.ACCEPTABLE)
+						|| output.getItem() == Items.ENCHANTED_BOOK) {
+					newCost += Math.min(entry.getIntValue(), serverHardCap(entry, enchantment)) * ConfigManager.config.xpPerEnchantLevel;
+				}
+			}
+			levelCost.set(Math.max(newCost, 1));
 		}
 		levelCost.set(Math.min(ConfigManager.config.maxLevelCost, levelCost.get()));
 
@@ -184,15 +203,6 @@ public class AnvilScreenHandlerMixin {
 	)
 	private int raiseTooExpensiveLimit(int original) {
 		return Integer.MAX_VALUE;
-	}
-
-	@ModifyVariable(
-			method = "updateResult",
-			at = @At(value = "STORE", ordinal = 0), // bl4 = enchantment.isAcceptableItem()
-			ordinal = 0
-	)
-	private boolean alwaysTrue(boolean bl4) {
-		return true;
 	}
 
 	/**

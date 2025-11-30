@@ -5,6 +5,8 @@ public class EnchantmentsUnboundConfig {
 	public int levelCost = 50;
 	public int maxLevelCost = 1000;
 	public double levelCostScalingMultiplier = 2.0;
+	public boolean useXpPerEnchantLevel = true;
+	public int xpPerEnchantLevel = 3;
 
 	public boolean overwriteCustomEnchants = false;
 	public int customEnchantCap = 255;

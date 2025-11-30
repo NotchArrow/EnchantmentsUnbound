@@ -1,5 +1,6 @@
 package com.notcharrow.enchantmentsunbound;
 
+import com.notcharrow.enchantmentsunbound.commands.CommandHelper;
 import com.notcharrow.enchantmentsunbound.config.ConfigManager;
 import com.notcharrow.enchantmentsunbound.helper.TextFormat;
 import net.fabricmc.api.ModInitializer;
@@ -12,6 +13,7 @@ public class EnchantmentsUnbound implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		ConfigManager.loadConfig();
+		CommandHelper.registerCommands();
 
 		ServerTickEvents.END_SERVER_TICK.register(server -> {
 			if (ConfigManager.config.showActionbarMessage) {
