@@ -23,6 +23,16 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 
 		ConfigCategory general = builder.getOrCreateCategory(Text.of("General Settings"));
 
+		addBoolean(general, "Use Level Cost Per Enchantment", "Anvil transaction cost will equal the total enchantment " +
+				"level of the item times the cost per level",
+				ConfigManager.config.useXpPerEnchantLevel,
+				value -> ConfigManager.config.useXpPerEnchantLevel = value);
+
+		addIntField(general, "Level Cost Per Enchantment Level", "The level cost per enchantment present on the anvil output",
+				ConfigManager.config.xpPerEnchantLevel,
+				value -> ConfigManager.config.xpPerEnchantLevel = value,
+				1, Integer.MAX_VALUE);
+
 		addBoolean(general, "Static Cost", "Use static cost instead of vanilla scaling",
 				ConfigManager.config.staticCost,
 				value -> ConfigManager.config.staticCost = value);

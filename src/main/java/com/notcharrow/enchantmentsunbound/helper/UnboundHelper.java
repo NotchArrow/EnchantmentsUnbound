@@ -21,6 +21,9 @@ import java.util.Objects;
 import java.util.Set;
 
 public class UnboundHelper {
+
+	public static Object2IntMap<RegistryEntry<Enchantment>> combined = new Object2IntArrayMap<>();
+
 	public static void getEnchantments(ItemStack itemStack, Object2IntMap<RegistryEntry<Enchantment>> enchantments) {
 		enchantments.clear();
 
@@ -52,7 +55,7 @@ public class UnboundHelper {
 			output.set(DataComponentTypes.CUSTOM_NAME, Text.literal(newName));
 		}
 
-		Object2IntMap<RegistryEntry<Enchantment>> combined = new Object2IntArrayMap<>();
+		combined = new Object2IntArrayMap<>();
 
 		combined.putAll(leftEnchants);
 		combined.putAll(rightEnchants);
