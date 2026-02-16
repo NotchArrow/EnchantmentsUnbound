@@ -1,37 +1,41 @@
-![Title](https://cdn.modrinth.com/data/cached_images/520cbf3d9b95e9664cf05681597765548f7e18b1.png)
-# Overview
-Uncapped Enchantment Levels in the Anvil and No Enchantment Conflicts.
+![Enchantments Unbound](https://cdn.modrinth.com/data/cached_images/8ada4c5fd129455f77fa91cf80fe2d54aab230ec.png)
+Customizable level caps, cost scaling, enchantment compatibility, item renaming, and more!
 
-The [Gallery](https://modrinth.com/mod/enchantments-unbound/gallery) has some screenshots.
+**No Enchantment Conflicts** - Mending + Infinity
 
-## No Enchantment Conflicts
-- Mending + Infinity
-- Protection + Blast Protection
-- Sharpness + Smite
-- Looting on Tridents
-- etc...
-  
-## No Enchantment Level Cap
-Sharpness 75? Go for it!
+**Exponential Cost Scaling** - More enchanted books and more XP levels each combination
 
-This mod does not modify the vanilla behavior of enchantments, so some will not scale, while others get a little crazy at high levels.
+**Never Too Expensive** - Configurable scaling or a set value
 
-## Balancing
-Any combination that the mod handles costs 39 levels (customizable in the config .json)
-However, high levels naturally get expensive/tedious.
+**Native Custom Enchantment Support** - Full configurability for custom enchantments
 
-Sharpness VI = 2 Sharpness V (1x 39 levels)
+![Feature Showcase](https://cdn.modrinth.com/data/cached_images/e536eb0d548815feb58ff458c6806c8883f97fee_0.webp)
 
-Sharpness VII = 2 Sharpness VI = 4 Sharpness V (3x 39 levels)
+### Individual Enchantment Level Caps
+![Feature Showcase 2](https://cdn.modrinth.com/data/cached_images/dbf17fe3dd1ad6fd481040ecd487cce4628197f7_0.webp)
 
-Sharpness VIII = 2 Sharpness VII... 8 Sharpness V (7x 39 levels)
+### Enchantment Conflict Settings
+![Feature Showcase 3](https://cdn.modrinth.com/data/cached_images/ac265389bb161f6588e5a2de6a4f70fbca40d7f9_0.webp)
 
-You can also customize the max level for every enchantment individually (default: 255)
+### Level Cost Configuration
+![Feature Showcase 4](https://cdn.modrinth.com/data/cached_images/a8229a7c71eb471543d34c2952939c325ee64150.png)
 
-# Dependencies
-### 📜 [Fabric API](https://modrinth.com/mod/fabric-api)
-Enchantments Unbound must be installed on the **server-side** (can be singleplayer)
+### Server Support for Vanilla Clients
 
-If you join a server that has this mod installed but do not have it clientside, you will probably want a [Texture Pack](https://www.planetminecraft.com/texture-pack/enchantment-level-fix/) to fix high levels displaying incorrectly. If you have the mod clientside, it will handle this for you.
+![Feature Showcase 5](https://cdn.modrinth.com/data/cached_images/dc740932539ac5ac6c8c35f6bd8ee24c6b3390aa_0.webp)
 
-# [Discord](https://discord.gg/ZCaGkZeb4C)
+**Comamnds for checking the current mod configuration**
+
+`/eu configinfo anvilcaps (page #)`
+
+![configinfo caps command demonstration](https://cdn.modrinth.com/data/cached_images/4fe2818dbc8192e917f884db0ab44739ebc35909.png)
+
+`/eu configinfo anvilcost`
+
+![configinfo cost command demonstration](https://cdn.modrinth.com/data/cached_images/cd8a45fce4997224c6f59fdba3263672413fd2cc.png)
+
+`/eu configinfo misc`
+
+![configinfo misc command demonstration](https://cdn.modrinth.com/data/cached_images/17076dfda7650d2b63ab361bd778884129f9f12e.png)
+
+Please join my [Discord](https://discord.gg/ZCaGkZeb4C) with feedback, questions, bugs, or to say thanks!

@@ -2,6 +2,11 @@ package com.notcharrow.enchantmentsunbound.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
 
 import java.io.File;
 import java.io.FileReader;
@@ -37,5 +42,22 @@ public class ConfigManager {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static void updateEnchantmentLists(DynamicRegistryManager registryManager) {
+		Registry<Enchantment> registry = registryManager.getOrThrow(RegistryKeys.ENCHANTMENT);
+
+		for (var entry: registry.getEntrySet()) {
+			String id = entry.getKey().getValue().toString();
+			if (!ConfigManager.config.enchantmentAnvilCaps.containsKey(id)) {
+				if (id.contains("minecraft:")) {
+					ConfigManager.config.enchantmentAnvilCaps.put(id, 255);
+				} else {
+					Enchantment enchantment = entry.getValue();
+					ConfigManager.config.enchantmentAnvilCaps.put(id, enchantment.getMaxLevel());
+				}
+			}
+		}
+		ConfigManager.saveConfig();
 	}
 }

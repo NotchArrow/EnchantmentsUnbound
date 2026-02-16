@@ -4,8 +4,10 @@ import com.notcharrow.enchantmentsunbound.commands.CommandHelper;
 import com.notcharrow.enchantmentsunbound.config.ConfigManager;
 import com.notcharrow.enchantmentsunbound.helper.TextFormat;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.screen.AnvilScreenHandler;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 public class EnchantmentsUnbound implements ModInitializer {
@@ -14,6 +16,13 @@ public class EnchantmentsUnbound implements ModInitializer {
 	public void onInitialize() {
 		ConfigManager.loadConfig();
 		CommandHelper.registerCommands();
+
+		ServerLifecycleEvents.SERVER_STARTED.register(((server) -> {
+			ConfigManager.updateEnchantmentLists(server.getRegistryManager());
+		}));
+		ServerLifecycleEvents.END_DATA_PACK_RELOAD.register(((server, resourceManager, b) -> {
+			ConfigManager.updateEnchantmentLists(server.getRegistryManager());
+		}));
 
 		ServerTickEvents.END_SERVER_TICK.register(server -> {
 			if (ConfigManager.config.showActionbarMessage) {

@@ -1,5 +1,7 @@
 package com.notcharrow.enchantmentsunbound.config;
 
+import java.util.TreeMap;
+
 public class EnchantmentsUnboundConfig {
 	public boolean staticCost = false;
 	public int levelCost = 50;
@@ -8,54 +10,11 @@ public class EnchantmentsUnboundConfig {
 	public boolean useXpPerEnchantLevel = true;
 	public int xpPerEnchantLevel = 3;
 
-	public boolean overwriteCustomEnchants = false;
-	public int customEnchantCap = 255;
-	public boolean overwriteVanillaEnchants = true;
-	public boolean useGlobalVanillaCap = false;
-	public int globalVanillaCap = 255;
+	public boolean useCustomAnvilCap = true;
+	public boolean useGlobalAnvilCap = false;
+	public int globalAnvilCap = 255;
 
-	public int aqua_affinity = 255;
-	public int bane_of_arthropods = 255;
-	public int binding_curse = 255;
-	public int blast_protection = 255;
-	public int breach = 255;
-	public int channeling = 255;
-	public int density = 255;
-	public int depth_strider = 255;
-	public int efficiency = 255;
-	public int feather_falling = 255;
-	public int fire_aspect = 255;
-	public int fire_protection = 255;
-	public int flame = 255;
-	public int fortune = 255;
-	public int frost_walker = 255;
-	public int impaling = 255;
-	public int infinity = 255;
-	public int knockback = 255;
-	public int looting = 255;
-	public int loyalty = 255;
-	public int luck_of_the_sea = 255;
-	public int lure = 255;
-	public int mending = 255;
-	public int multishot = 255;
-	public int piercing = 255;
-	public int power = 255;
-	public int projectile_protection = 255;
-	public int protection = 255;
-	public int punch = 255;
-	public int quick_charge = 255;
-	public int respiration = 255;
-	public int riptide = 255;
-	public int sharpness = 255;
-	public int silk_touch = 255;
-	public int smite = 255;
-	public int soul_speed = 255;
-	public int sweeping = 255;
-	public int swift_sneak = 255;
-	public int thorns = 255;
-	public int unbreaking = 255;
-	public int vanishing_curse = 255;
-	public int wind_burst = 255;
+	public TreeMap<String, Integer> enchantmentAnvilCaps = new TreeMap<>();
 
 	public boolean damageConflicts = true;
 	public boolean protectionConflicts = true;
