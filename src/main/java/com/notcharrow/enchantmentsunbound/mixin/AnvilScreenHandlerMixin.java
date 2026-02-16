@@ -2,24 +2,19 @@ package com.notcharrow.enchantmentsunbound.mixin;
 
 import com.notcharrow.enchantmentsunbound.config.ConfigManager;
 import com.notcharrow.enchantmentsunbound.helper.AnvilScreenHandlerPlayerAccess;
-import com.notcharrow.enchantmentsunbound.helper.UnboundHelper;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.fabricmc.fabric.api.item.v1.EnchantingContext;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.thrown.ExperienceBottleEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.screen.Property;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -111,7 +106,7 @@ public class AnvilScreenHandlerMixin {
 				RegistryEntry<Enchantment> enchantment = entry.getKey();
 				if (!ConfigManager.config.itemEnchantConflicts || output.canBeEnchantedWith(enchantment, EnchantingContext.ACCEPTABLE)
 						|| output.getItem() == Items.ENCHANTED_BOOK) {
-					newCost += Math.min(entry.getIntValue(), serverHardCap(entry, enchantment)) * ConfigManager.config.xpPerEnchantLevel;
+					newCost += Math.min(entry.getIntValue(), getAnvilCap(enchantment)) * ConfigManager.config.xpPerEnchantLevel;
 				}
 			}
 			levelCost.set(Math.max(newCost, 1));

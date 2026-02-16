@@ -1,14 +1,16 @@
 package com.notcharrow.enchantmentsunbound.commands;
 
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.notcharrow.enchantmentsunbound.config.ConfigManager;
 import com.notcharrow.enchantmentsunbound.helper.TextFormat;
+import com.notcharrow.enchantmentsunbound.helper.UnboundHelper;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.server.command.ServerCommandSource;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
+import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
 
@@ -19,83 +21,45 @@ public class ConfigInfoCommand {
 			dispatcher.register(
 				literal("eu")
 					.then(literal("configinfo")
-						.then(literal("caps")
-							.executes(ConfigInfoCommand::executeCaps))
-						.then(literal("cost")
-							.executes(ConfigInfoCommand::executeCost))
+						.then(literal("anvilcaps")
+							.then(argument("Page Number", IntegerArgumentType.integer())
+								.executes(ConfigInfoCommand::executeAnvilCaps)))
+						.then(literal("anvilcost")
+							.executes(ConfigInfoCommand::executeAnvilCost))
 						.then(literal("misc")
 							.executes(ConfigInfoCommand::executeMisc))));
 		});
 	}
 
-	private static int executeCaps(CommandContext<ServerCommandSource> context) {
-		Map<String, Integer> capMap = generateCapMap();
-		context.getSource().sendMessage(TextFormat.enchantCapText("Enchantment: Custom Level Cap"));
+	private static int executeAnvilCaps(CommandContext<ServerCommandSource> context) {
+		TreeMap<String, Integer> capMap = ConfigManager.config.enchantmentAnvilCaps;
+		List<Map.Entry<String, Integer>> capList = new ArrayList<>(capMap.entrySet());
+		int pageNumber = IntegerArgumentType.getInteger(context, "Page Number");
+		int totalPages = (int) Math.ceil(capList.size() / 10.0);
+		pageNumber = Math.clamp(pageNumber, 1, totalPages);
 
-		if (ConfigManager.config.overwriteVanillaEnchants) {
-			if (ConfigManager.config.useGlobalVanillaCap) {
-				context.getSource().sendMessage(TextFormat.enchantCapText("Global Vanilla Cap: " + ConfigManager.config.customEnchantCap));
+		context.getSource().sendMessage(TextFormat.enchantCapText("Enchantment: Custom Anvil Level Cap (Page " + pageNumber + " / " + totalPages + ")"));
+
+		if (ConfigManager.config.useCustomAnvilCap) {
+			if (ConfigManager.config.useGlobalAnvilCap) {
+				context.getSource().sendMessage(TextFormat.enchantCapText("Global Anvil Cap: " + ConfigManager.config.globalAnvilCap));
 			} else {
-				for (Map.Entry<String, Integer> entry: capMap.entrySet()) {
-					context.getSource().sendMessage(TextFormat.enchantCapText(entry.getKey() +  ": " + entry.getValue()));
+				for (int i = 10 * (pageNumber - 1); i < Math.min(capList.size(), 10 * pageNumber); i++) {
+					var entry = capList.get(i);
+					String name = UnboundHelper.formatIdToName(entry.getKey());
+					String modId = entry.getKey().split(":")[0];
+					if (!Objects.equals(modId, "minecraft")) {
+						name = "(" + UnboundHelper.formatIdToName(modId) + ") " + name;
+					}
+					context.getSource().sendMessage(TextFormat.enchantCapText(name +  ": " + entry.getValue()));
 				}
 			}
-		}
-		if (ConfigManager.config.overwriteCustomEnchants) {
-			context.getSource().sendMessage(TextFormat.enchantCapText("Custom Enchantment Cap: " + ConfigManager.config.customEnchantCap));
 		}
 
 		return 1;
 	}
 
-	public static Map<String, Integer> generateCapMap() {
-		Map<String, Integer> map = new LinkedHashMap<>();
-		map.put("Aqua Affinity", ConfigManager.config.aqua_affinity);
-		map.put("Bane of Arthropods", ConfigManager.config.bane_of_arthropods);
-		map.put("Binding Curse", ConfigManager.config.binding_curse);
-		map.put("Blast Protection", ConfigManager.config.blast_protection);
-		map.put("Breach", ConfigManager.config.breach);
-		map.put("Channeling", ConfigManager.config.channeling);
-		map.put("Density", ConfigManager.config.density);
-		map.put("Depth Strider", ConfigManager.config.depth_strider);
-		map.put("Efficiency", ConfigManager.config.efficiency);
-		map.put("Feather Falling", ConfigManager.config.feather_falling);
-		map.put("Fire Aspect", ConfigManager.config.fire_aspect);
-		map.put("Fire Protection", ConfigManager.config.fire_protection);
-		map.put("Flame", ConfigManager.config.flame);
-		map.put("Fortune", ConfigManager.config.fortune);
-		map.put("Frost Walker", ConfigManager.config.frost_walker);
-		map.put("Impaling", ConfigManager.config.impaling);
-		map.put("Infinity", ConfigManager.config.infinity);
-		map.put("Knockback", ConfigManager.config.knockback);
-		map.put("Looting", ConfigManager.config.looting);
-		map.put("Loyalty", ConfigManager.config.loyalty);
-		map.put("Luck of the Sea", ConfigManager.config.luck_of_the_sea);
-		map.put("Lure", ConfigManager.config.lure);
-		map.put("Mending", ConfigManager.config.mending);
-		map.put("Multishot", ConfigManager.config.multishot);
-		map.put("Piercing", ConfigManager.config.piercing);
-		map.put("Power", ConfigManager.config.power);
-		map.put("Projectile Protection", ConfigManager.config.projectile_protection);
-		map.put("Protection", ConfigManager.config.protection);
-		map.put("Punch", ConfigManager.config.punch);
-		map.put("Quick Charge", ConfigManager.config.quick_charge);
-		map.put("Respiration", ConfigManager.config.respiration);
-		map.put("Riptide", ConfigManager.config.riptide);
-		map.put("Sharpness", ConfigManager.config.sharpness);
-		map.put("Silk Touch", ConfigManager.config.silk_touch);
-		map.put("Smite", ConfigManager.config.smite);
-		map.put("Soul Speed", ConfigManager.config.soul_speed);
-		map.put("Sweeping", ConfigManager.config.sweeping);
-		map.put("Swift Sneak", ConfigManager.config.swift_sneak);
-		map.put("Thorns", ConfigManager.config.thorns);
-		map.put("Unbreaking", ConfigManager.config.unbreaking);
-		map.put("Vanishing Curse", ConfigManager.config.vanishing_curse);
-		map.put("Wind Burst", ConfigManager.config.wind_burst);
-		return map;
-	}
-
-	private static int executeCost(CommandContext<ServerCommandSource> context) {
+	private static int executeAnvilCost(CommandContext<ServerCommandSource> context) {
 		if (ConfigManager.config.staticCost) {
 			context.getSource().sendMessage(TextFormat.costInfoText("All anvil transactions cost " +
 					ConfigManager.config.levelCost + " levels."));
