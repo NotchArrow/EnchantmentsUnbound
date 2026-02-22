@@ -98,7 +98,7 @@ public class ConfigInfoCommand {
 		map.put("Crossbow enchantment conflicts are removed", ConfigManager.config.crossbowConflicts);
 		map.put("Tool enchantment conflicts are removed", ConfigManager.config.toolConflicts);
 
-		map.put("Any enchantment can go on any item", ConfigManager.config.itemEnchantConflicts);
+		map.put("Any enchantment can go on any item", !ConfigManager.config.itemEnchantConflicts);
 		map.put("Color coded anvil renaming is enabled", ConfigManager.config.colorCodedRenaming);
 		return map;
 	}
