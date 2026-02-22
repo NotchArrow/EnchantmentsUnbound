@@ -26,7 +26,8 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 	private Screen createConfigScreen(Screen parent) {
 		ConfigBuilder builder = ConfigBuilder.create()
 				.setParentScreen(parent)
-				.setTitle(Text.of("Enchantments Unbound Config"));
+				.setTitle(Text.of("Enchantments Unbound Config"))
+				.setSavingRunnable(ConfigManager::saveConfig);
 
 		addGeneralSettings(builder);
 		addAnvilCaps(builder);
@@ -55,7 +56,6 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 							if (newValue < min) newValue = min;
 							if (newValue > max) newValue = max;
 							onSave.accept(newValue);
-							ConfigManager.saveConfig();
 						})
 						.build()
 		);
@@ -70,7 +70,6 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 							if (newValue < min) newValue = min;
 							if (newValue > max) newValue = max;
 							onSave.accept(newValue);
-							ConfigManager.saveConfig();
 						})
 						.build()
 		);
