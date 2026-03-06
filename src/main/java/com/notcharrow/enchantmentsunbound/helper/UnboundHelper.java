@@ -55,15 +55,11 @@ public class UnboundHelper {
 
 		combined = new Object2IntArrayMap<>();
 
-		leftEnchants.forEach((key, value) ->
-			combined.merge(key, value, Integer::max)
-		);
-		rightEnchants.forEach((key, value) ->
-				combined.merge(key, value, Integer::max)
-		);
-		outputEnchants.forEach((key, value) ->
-				combined.merge(key, value, Integer::max)
-		);
+		for (Object2IntMap<RegistryEntry<Enchantment>> map : List.of(leftEnchants, rightEnchants, outputEnchants)) {
+			for (var entry : map.object2IntEntrySet()) {
+				combined.merge(entry.getKey(), entry.getIntValue(), Integer::max);
+			}
+		}
 
 		List<RegistryEntry<Enchantment>> toRemove = new ArrayList<>();
 		List<RegistryEntry<Enchantment>> enchants = new ArrayList<>(combined.keySet());
