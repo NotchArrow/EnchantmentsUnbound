@@ -16,6 +16,9 @@
 	"icon": "assets/enchantments-unbound/icon.png",
 	"environment": "*",
 	"entrypoints": {
+        "client": [
+          "com.notcharrow.enchantmentsunbound.EnchantmentsUnboundClient"
+        ],
 		"main": [
           "com.notcharrow.enchantmentsunbound.EnchantmentsUnbound"
 		],

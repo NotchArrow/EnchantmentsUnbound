@@ -16,6 +16,11 @@ public class EnchantmentsUnboundConfig {
 
 	public TreeMap<String, Integer> enchantmentAnvilCaps = new TreeMap<>();
 
+	public boolean modifyVillagers = false;
+	public boolean useGlobalVillagerCap = false;
+	public int globalVillagerCap = 10;
+	public TreeMap<String, Integer> enchantmentVillagerCaps = new TreeMap<>();
+
 	public boolean damageConflicts = true;
 	public boolean protectionConflicts = true;
 	public boolean bowConflicts = true;

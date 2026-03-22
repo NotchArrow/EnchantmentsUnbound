@@ -48,12 +48,22 @@ public class ConfigManager {
 
 		for (var entry: registry.getEntrySet()) {
 			String id = entry.getKey().getValue().toString();
+
 			if (!ConfigManager.config.enchantmentAnvilCaps.containsKey(id)) {
 				if (id.contains("minecraft:")) {
 					ConfigManager.config.enchantmentAnvilCaps.put(id, 255);
 				} else {
 					Enchantment enchantment = entry.getValue();
 					ConfigManager.config.enchantmentAnvilCaps.put(id, enchantment.getMaxLevel());
+				}
+			}
+
+			if (!ConfigManager.config.enchantmentVillagerCaps.containsKey(id)) {
+				if (id.contains("minecraft:")) {
+					ConfigManager.config.enchantmentVillagerCaps.put(id, 10);
+				} else {
+					Enchantment enchantment = entry.getValue();
+					ConfigManager.config.enchantmentVillagerCaps.put(id, enchantment.getMaxLevel());
 				}
 			}
 		}
