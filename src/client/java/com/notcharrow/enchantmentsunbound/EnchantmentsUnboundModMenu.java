@@ -31,6 +31,7 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 
 		addGeneralSettings(builder);
 		addAnvilCaps(builder);
+		addVillagerCaps(builder);
 		addConflictSettings(builder);
 		addOtherSettings(builder);
 
@@ -152,6 +153,52 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 			}
 
 			anvilEnchantCaps.addEntry(subCategory.build());
+		}
+	}
+
+	private static void addVillagerCaps(ConfigBuilder builder) {
+		ConfigCategory villagerEnchantCaps = builder.getOrCreateCategory(Text.of("Villager Enchant Caps"));
+		ConfigEntryBuilder entryBuilder = builder.entryBuilder();
+
+		addBoolean(villagerEnchantCaps, "Modify Villagers", "Modify enchanted books from villager trading",
+				ConfigManager.config.modifyVillagers,
+				value -> ConfigManager.config.modifyVillagers = value);
+
+		addBoolean(villagerEnchantCaps, "Use Global Villager Cap", "Use global cap for villager enchants",
+				ConfigManager.config.useGlobalVillagerCap,
+				value -> ConfigManager.config.useGlobalVillagerCap = value);
+
+		addIntField(villagerEnchantCaps, "Global Anvil Cap", "Cap for all villager enchantments if enabled",
+				ConfigManager.config.globalVillagerCap,
+				value -> ConfigManager.config.globalVillagerCap = value,
+				1, 255);
+
+		Map<String, List<Map.Entry<String, Integer>>> groupedEnchants = new TreeMap<>();
+		for (Map.Entry<String, Integer> entry : ConfigManager.config.enchantmentVillagerCaps.entrySet()) {
+			String namespace = entry.getKey().contains(":") ? entry.getKey().split(":")[0] : "minecraft";
+			groupedEnchants.computeIfAbsent(namespace, key -> new ArrayList<>()).add(entry);
+		}
+
+		for (Map.Entry<String, List<Map.Entry<String, Integer>>> group : groupedEnchants.entrySet()) {
+			String modId = group.getKey();
+			String categoryName = modId.equals("minecraft") ? "Vanilla" : UnboundHelper.formatIdToName(modId);
+
+			SubCategoryBuilder subCategory = entryBuilder.startSubCategory(Text.of(categoryName));
+
+			for (Map.Entry<String, Integer> entry : group.getValue()) {
+				String id = entry.getKey();
+				String name = UnboundHelper.formatIdToName(id);
+
+				subCategory.add(entryBuilder.startIntField(Text.of(name), entry.getValue())
+						.setTooltip(Text.of("Enchantment Level Cap from Villager Trading (" + id + ")"))
+						.setDefaultValue(10)
+						.setMin(1).setMax(255)
+						.setSaveConsumer(newValue -> ConfigManager.config.enchantmentVillagerCaps.put(id, newValue))
+						.build()
+				);
+			}
+
+			villagerEnchantCaps.addEntry(subCategory.build());
 		}
 	}
 
