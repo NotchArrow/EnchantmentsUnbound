@@ -2,15 +2,16 @@ package com.notcharrow.enchantmentsunbound.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKeys;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.item.enchantment.Enchantment;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Objects;
 
 public class ConfigManager {
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -43,17 +44,16 @@ public class ConfigManager {
 		}
 	}
 
-	public static void updateEnchantmentLists(DynamicRegistryManager registryManager) {
-		Registry<Enchantment> registry = registryManager.getOrThrow(RegistryKeys.ENCHANTMENT);
+	public static void updateEnchantmentLists(RegistryAccess registryManager) {
+		Registry<Enchantment> registry = registryManager.lookupOrThrow(Registries.ENCHANTMENT);
 
-		for (var entry: registry.getEntrySet()) {
-			String id = entry.getKey().getValue().toString();
+		for (Enchantment enchantment: registry) {
+			String id = Objects.requireNonNull(registry.getKey(enchantment)).toString();
 
 			if (!ConfigManager.config.enchantmentAnvilCaps.containsKey(id)) {
 				if (id.contains("minecraft:")) {
 					ConfigManager.config.enchantmentAnvilCaps.put(id, 255);
 				} else {
-					Enchantment enchantment = entry.getValue();
 					ConfigManager.config.enchantmentAnvilCaps.put(id, enchantment.getMaxLevel());
 				}
 			}
@@ -62,7 +62,6 @@ public class ConfigManager {
 				if (id.contains("minecraft:")) {
 					ConfigManager.config.enchantmentVillagerCaps.put(id, 10);
 				} else {
-					Enchantment enchantment = entry.getValue();
 					ConfigManager.config.enchantmentVillagerCaps.put(id, enchantment.getMaxLevel());
 				}
 			}

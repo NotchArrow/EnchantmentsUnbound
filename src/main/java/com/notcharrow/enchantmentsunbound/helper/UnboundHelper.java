@@ -4,14 +4,13 @@ import com.notcharrow.enchantmentsunbound.config.ConfigManager;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.fabricmc.fabric.api.item.v1.EnchantingContext;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.text.Text;
-import net.minecraft.util.StringHelper;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.StringUtil;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,54 +19,52 @@ import java.util.Set;
 
 public class UnboundHelper {
 
-	public static Object2IntMap<RegistryEntry<Enchantment>> combined = new Object2IntArrayMap<>();
+	public static Object2IntMap<Holder<Enchantment>> combined = new Object2IntArrayMap<>();
 
-	public static void getEnchantments(ItemStack itemStack, Object2IntMap<RegistryEntry<Enchantment>> enchantments) {
+	public static void getEnchantments(ItemStack itemStack, Object2IntMap<Holder<Enchantment>> enchantments) {
 		enchantments.clear();
 
 		if (!itemStack.isEmpty()) {
-			Set<Object2IntMap.Entry<RegistryEntry<Enchantment>>> itemEnchantments = itemStack.getItem() == Items.ENCHANTED_BOOK
-					? Objects.requireNonNull(itemStack.get(DataComponentTypes.STORED_ENCHANTMENTS)).getEnchantmentEntries()
-					: Objects.requireNonNull(itemStack.get(DataComponentTypes.ENCHANTMENTS)).getEnchantmentEntries();
+			Set<Object2IntMap.Entry<Holder<Enchantment>>> itemEnchantments = itemStack.getItem() == Items.ENCHANTED_BOOK
+					? Objects.requireNonNull(itemStack.get(DataComponents.STORED_ENCHANTMENTS)).entrySet()
+					: Objects.requireNonNull(itemStack.get(DataComponents.ENCHANTMENTS)).entrySet();
 
-			for (Object2IntMap.Entry<RegistryEntry<Enchantment>> entry : itemEnchantments) {
+			for (Object2IntMap.Entry<Holder<Enchantment>> entry : itemEnchantments) {
 				enchantments.put(entry.getKey(), entry.getIntValue());
 			}
 		}
 	}
 
 	public static ItemStack createOutput(
-			Object2IntMap<RegistryEntry<Enchantment>> outputEnchants,
-			Object2IntMap<RegistryEntry<Enchantment>> leftEnchants,
-			Object2IntMap<RegistryEntry<Enchantment>> rightEnchants,
+			Object2IntMap<Holder<Enchantment>> outputEnchants,
+			Object2IntMap<Holder<Enchantment>> leftEnchants,
+			Object2IntMap<Holder<Enchantment>> rightEnchants,
 			ItemStack leftInput,
 			String newName
 	) {
 		ItemStack output = leftInput.copy();
-		EnchantmentHelper.apply(output, (components) ->
-				components.remove((enchantment) -> true));
 
-		if (StringHelper.isBlank(newName)) {
-			output.remove(DataComponentTypes.CUSTOM_NAME);
+		if (StringUtil.isBlank(newName)) {
+			output.remove(DataComponents.CUSTOM_NAME);
 		} else {
-			output.set(DataComponentTypes.CUSTOM_NAME, Text.literal(newName));
+			output.set(DataComponents.CUSTOM_NAME, Component.literal(newName));
 		}
 
 		combined = new Object2IntArrayMap<>();
 
-		for (Object2IntMap<RegistryEntry<Enchantment>> map : List.of(leftEnchants, rightEnchants, outputEnchants)) {
+		for (Object2IntMap<Holder<Enchantment>> map : List.of(leftEnchants, rightEnchants, outputEnchants)) {
 			for (var entry : map.object2IntEntrySet()) {
 				combined.merge(entry.getKey(), entry.getIntValue(), Integer::max);
 			}
 		}
 
-		List<RegistryEntry<Enchantment>> toRemove = new ArrayList<>();
-		List<RegistryEntry<Enchantment>> enchants = new ArrayList<>(combined.keySet());
+		List<Holder<Enchantment>> toRemove = new ArrayList<>();
+		List<Holder<Enchantment>> enchants = new ArrayList<>(combined.keySet());
 
 		for (int i = 0; i < enchants.size(); i++) {
-			RegistryEntry<Enchantment> e1 = enchants.get(i);
+			Holder<Enchantment> e1 = enchants.get(i);
 			for (int j = i + 1; j < enchants.size(); j++) {
-				RegistryEntry<Enchantment> e2 = enchants.get(j);
+				Holder<Enchantment> e2 = enchants.get(j);
 				if (!canCombineAccordingToGroups(e1, e2)) {
 					// Remove the second one in the conflict pair
 					toRemove.add(e2);
@@ -75,24 +72,24 @@ public class UnboundHelper {
 			}
 		}
 
-		for (RegistryEntry<Enchantment> rem : toRemove) {
+		for (Holder<Enchantment> rem : toRemove) {
 			combined.remove(rem);
 		}
 
-		for (Object2IntMap.Entry<RegistryEntry<Enchantment>> entry: combined.object2IntEntrySet()) {
-			RegistryEntry<Enchantment> enchantment = entry.getKey();
+		for (Object2IntMap.Entry<Holder<Enchantment>> entry: combined.object2IntEntrySet()) {
+			Holder<Enchantment> enchantment = entry.getKey();
 			if (!ConfigManager.config.itemEnchantConflicts || output.canBeEnchantedWith(enchantment, EnchantingContext.ACCEPTABLE)
 			|| output.getItem() == Items.ENCHANTED_BOOK) {
-				output.addEnchantment(enchantment, Math.min(entry.getIntValue(), getAnvilCap(enchantment)));
+				output.enchant(enchantment, Math.min(entry.getIntValue(), getAnvilCap(enchantment)));
 			}
 		}
 
 		return output;
 	}
 
-	private static boolean canCombineAccordingToGroups(RegistryEntry<Enchantment> a, RegistryEntry<Enchantment> b) {
-		String id1 = a.getIdAsString().replace("minecraft:", "");
-		String id2 = b.getIdAsString().replace("minecraft:", "");
+	private static boolean canCombineAccordingToGroups(Holder<Enchantment> a, Holder<Enchantment> b) {
+		String id1 = a.getRegisteredName().replace("minecraft:", "");
+		String id2 = b.getRegisteredName().replace("minecraft:", "");
 
 		// Damage group
 		if (in(id1, "sharpness", "smite", "bane_of_arthropods") &&
@@ -141,7 +138,7 @@ public class UnboundHelper {
 		return false;
 	}
 
-	public static int getAnvilCap(RegistryEntry<Enchantment> enchantment) {
+	public static int getAnvilCap(Holder<Enchantment> enchantment) {
 		if (!ConfigManager.config.useCustomAnvilCap) {
 			return enchantment.value().getMaxLevel();
 		}
@@ -149,7 +146,7 @@ public class UnboundHelper {
 			return ConfigManager.config.globalAnvilCap;
 		}
 
-		return ConfigManager.config.enchantmentAnvilCaps.getOrDefault(enchantment.getIdAsString(), enchantment.value().getMaxLevel());
+		return ConfigManager.config.enchantmentAnvilCaps.getOrDefault(enchantment.getRegisteredName(), enchantment.value().getMaxLevel());
 	}
 
 	public static String formatIdToName(String id) {

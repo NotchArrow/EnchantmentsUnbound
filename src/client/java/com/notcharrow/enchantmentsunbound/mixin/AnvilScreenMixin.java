@@ -1,10 +1,10 @@
 package com.notcharrow.enchantmentsunbound.mixin;
 
-import net.minecraft.client.gui.screen.ingame.AnvilScreen;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.inventory.AnvilScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -15,21 +15,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AnvilScreen.class)
 public class AnvilScreenMixin {
-	@Shadow @Final @Mutable private static Text TOO_EXPENSIVE_TEXT;
-	@Shadow @Final private PlayerEntity player;
+	@Shadow @Final @Mutable private static Component TOO_EXPENSIVE_TEXT;
+	@Shadow @Final private Player player;
 
-	@Inject(method = "handledScreenTick", at = @At("TAIL"))
+	@Inject(method = "containerTick", at = @At("TAIL"))
 	private void handledScreenTick(CallbackInfo ci) {
 
 	AnvilScreen screen = ((AnvilScreen) (Object) this);
-	int levelCost = screen.getScreenHandler().getLevelCost();
+	int levelCost = screen.getMenu().getCost();
 	int xpLevel = player.experienceLevel;
-	MutableText text = Text.literal("Enchantment Cost: " + levelCost);
+	MutableComponent text = Component.literal("Enchantment Cost: " + levelCost);
 
 	if (xpLevel >= levelCost) {
-		text.formatted(Formatting.GREEN);
+		text.withStyle(ChatFormatting.GREEN);
 	} else {
-		text.formatted(Formatting.RED);
+		text.withStyle(ChatFormatting.RED);
 	}
 	TOO_EXPENSIVE_TEXT = text;
 	}

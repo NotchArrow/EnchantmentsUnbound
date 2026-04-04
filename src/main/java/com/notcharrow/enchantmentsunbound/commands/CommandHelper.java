@@ -1,7 +1,7 @@
 package com.notcharrow.enchantmentsunbound.commands;
 
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ public class CommandHelper {
 		ConfigInfoCommand.register();
 	}
 
-	public static SuggestionProvider<ServerCommandSource> createSuggestionProvider(List<String> suggestions) {
+	public static SuggestionProvider<CommandSourceStack> createSuggestionProvider(List<String> suggestions) {
 		return (context, builder) -> {
 			for (String suggestion : suggestions) {
 				builder.suggest(suggestion);

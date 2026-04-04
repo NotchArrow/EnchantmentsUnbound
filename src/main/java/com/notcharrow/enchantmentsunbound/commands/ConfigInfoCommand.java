@@ -6,12 +6,12 @@ import com.notcharrow.enchantmentsunbound.config.ConfigManager;
 import com.notcharrow.enchantmentsunbound.helper.TextFormat;
 import com.notcharrow.enchantmentsunbound.helper.UnboundHelper;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 
 import java.util.*;
 
-import static net.minecraft.server.command.CommandManager.argument;
-import static net.minecraft.server.command.CommandManager.literal;
+import static net.minecraft.commands.Commands.argument;
+import static net.minecraft.commands.Commands.literal;
 
 
 public class ConfigInfoCommand {
@@ -31,27 +31,27 @@ public class ConfigInfoCommand {
 		});
 	}
 
-	private static int executeAnvilCaps(CommandContext<ServerCommandSource> context) {
+	private static int executeAnvilCaps(CommandContext<CommandSourceStack> context) {
 		TreeMap<String, Integer> capMap = ConfigManager.config.enchantmentAnvilCaps;
 		List<Map.Entry<String, Integer>> capList = new ArrayList<>(capMap.entrySet());
 		int pageNumber = IntegerArgumentType.getInteger(context, "Page Number");
 		int totalPages = (int) Math.ceil(capList.size() / 10.0);
 		pageNumber = Math.clamp(pageNumber, 1, totalPages);
 
-		context.getSource().sendMessage(TextFormat.enchantCapText("Enchantment: Custom Anvil Level Cap (Page " + pageNumber + " / " + totalPages + ")"));
+		context.getSource().sendSystemMessage(TextFormat.enchantCapText("Enchantment: Custom Anvil Level Cap (Page " + pageNumber + " / " + totalPages + ")"));
 
 		if (ConfigManager.config.useCustomAnvilCap) {
 			if (ConfigManager.config.useGlobalAnvilCap) {
-				context.getSource().sendMessage(TextFormat.enchantCapText("Global Anvil Cap: " + ConfigManager.config.globalAnvilCap));
+				context.getSource().sendSystemMessage(TextFormat.enchantCapText("Global Anvil Cap: " + ConfigManager.config.globalAnvilCap));
 			} else {
 				for (int i = 10 * (pageNumber - 1); i < Math.min(capList.size(), 10 * pageNumber); i++) {
-					var entry = capList.get(i);
+					Map.Entry<String, Integer> entry = capList.get(i);
 					String name = UnboundHelper.formatIdToName(entry.getKey());
 					String modId = entry.getKey().split(":")[0];
 					if (!Objects.equals(modId, "minecraft")) {
 						name = "(" + UnboundHelper.formatIdToName(modId) + ") " + name;
 					}
-					context.getSource().sendMessage(TextFormat.enchantCapText(name +  ": " + entry.getValue()));
+					context.getSource().sendSystemMessage(TextFormat.enchantCapText(name +  ": " + entry.getValue()));
 				}
 			}
 		}
@@ -59,17 +59,17 @@ public class ConfigInfoCommand {
 		return 1;
 	}
 
-	private static int executeAnvilCost(CommandContext<ServerCommandSource> context) {
+	private static int executeAnvilCost(CommandContext<CommandSourceStack> context) {
 		if (ConfigManager.config.staticCost) {
-			context.getSource().sendMessage(TextFormat.costInfoText("All anvil transactions cost " +
+			context.getSource().sendSystemMessage(TextFormat.costInfoText("All anvil transactions cost " +
 					ConfigManager.config.levelCost + " levels."));
 		} else if (ConfigManager.config.useXpPerEnchantLevel) {
-			context.getSource().sendMessage(TextFormat.costInfoText("Anvil transactions will cost " + ConfigManager.config.xpPerEnchantLevel +
+			context.getSource().sendSystemMessage(TextFormat.costInfoText("Anvil transactions will cost " + ConfigManager.config.xpPerEnchantLevel +
 					" levels per enchantment level on the item."));
-			context.getSource().sendMessage(TextFormat.costInfoText("Ex: Sharp VI, Unbreaking IV = 10 x " + ConfigManager.config.xpPerEnchantLevel +
+			context.getSource().sendSystemMessage(TextFormat.costInfoText("Ex: Sharp VI, Unbreaking IV = 10 x " + ConfigManager.config.xpPerEnchantLevel +
 					" levels = " + 10 * ConfigManager.config.xpPerEnchantLevel + " levels."));
 		} else {
-			context.getSource().sendMessage(TextFormat.costInfoText("Anvil transaction cost increases by " +
+			context.getSource().sendSystemMessage(TextFormat.costInfoText("Anvil transaction cost increases by " +
 					ConfigManager.config.levelCostScalingMultiplier + "x every transaction, with a maximum cost of " +
 					ConfigManager.config.maxLevelCost + " levels."));
 		}
@@ -77,12 +77,12 @@ public class ConfigInfoCommand {
 		return 1;
 	}
 
-	private static int executeMisc(CommandContext<ServerCommandSource> context) {
+	private static int executeMisc(CommandContext<CommandSourceStack> context) {
 		Map<String, Boolean> miscMap = generateMiscMap();
 
 		for (Map.Entry<String, Boolean> entry: miscMap.entrySet()) {
 			if (entry.getValue()) {
-				context.getSource().sendMessage(TextFormat.miscInfoText(entry.getKey()));
+				context.getSource().sendSystemMessage(TextFormat.miscInfoText(entry.getKey()));
 			}
 		}
 		return 1;

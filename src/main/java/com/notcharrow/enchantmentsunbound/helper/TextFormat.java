@@ -1,49 +1,49 @@
 package com.notcharrow.enchantmentsunbound.helper;
 
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 
 public class TextFormat {
-	public static Text styledText(String message) {
+	public static MutableComponent styledText(String message) {
 		String[] messageParts = message.split(":");
-		MutableText styledText = Text.literal(messageParts[0] + ":");
-		Style textStyle = Style.EMPTY.withBold(true).withColor(Formatting.GOLD);
+		MutableComponent styledText = Component.literal(messageParts[0] + ":");
+		Style textStyle = Style.EMPTY.withBold(true).withColor(ChatFormatting.GOLD);
 		styledText.setStyle(textStyle);
 
-		MutableText styledNumber = Text.literal(messageParts[1]);
-		textStyle = Style.EMPTY.withBold(true).withColor(Formatting.LIGHT_PURPLE);
+		MutableComponent styledNumber = Component.literal(messageParts[1]);
+		textStyle = Style.EMPTY.withBold(true).withColor(ChatFormatting.LIGHT_PURPLE);
 		styledNumber.setStyle(textStyle);
 
 		styledText.append(styledNumber);
 		return styledText;
 	}
 
-	public static Text enchantCapText(String message) {
+	public static MutableComponent enchantCapText(String message) {
 		String[] messageParts = message.split(":");
-		MutableText enchantCapText = Text.literal(messageParts[0] + ":");
-		Style textStyle = Style.EMPTY.withBold(false).withColor(Formatting.GOLD);
+		MutableComponent enchantCapText = Component.literal(messageParts[0] + ":");
+		Style textStyle = Style.EMPTY.withBold(false).withColor(ChatFormatting.GOLD);
 		enchantCapText.setStyle(textStyle);
 
-		MutableText styledNumber = Text.literal(messageParts[1]);
-		textStyle = Style.EMPTY.withBold(true).withColor(Formatting.LIGHT_PURPLE);
+		MutableComponent styledNumber = Component.literal(messageParts[1]);
+		textStyle = Style.EMPTY.withBold(true).withColor(ChatFormatting.LIGHT_PURPLE);
 		styledNumber.setStyle(textStyle);
 
 		enchantCapText.append(styledNumber);
 		return enchantCapText;
 	}
 
-	public static Text costInfoText(String message) {
-		MutableText costInfoText = Text.literal(message);
-		Style textStyle = Style.EMPTY.withColor(Formatting.GREEN);
+	public static MutableComponent costInfoText(String message) {
+		MutableComponent costInfoText = Component.literal(message);
+		Style textStyle = Style.EMPTY.withColor(ChatFormatting.GREEN);
 		costInfoText.setStyle(textStyle);
 		return costInfoText;
 	}
 
-	public static Text miscInfoText(String message) {
-		MutableText miscInfoText = Text.literal(message);
-		Style textStyle = Style.EMPTY.withColor(Formatting.AQUA);
+	public static MutableComponent miscInfoText(String message) {
+		MutableComponent miscInfoText = Component.literal(message);
+		Style textStyle = Style.EMPTY.withColor(ChatFormatting.AQUA);
 		miscInfoText.setStyle(textStyle);
 		return miscInfoText;
 	}

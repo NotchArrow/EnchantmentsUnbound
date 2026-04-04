@@ -8,8 +8,8 @@ import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 	private Screen createConfigScreen(Screen parent) {
 		ConfigBuilder builder = ConfigBuilder.create()
 				.setParentScreen(parent)
-				.setTitle(Text.of("Enchantments Unbound Config"))
+				.setTitle(Component.literal("Enchantments Unbound Config"))
 				.setSavingRunnable(ConfigManager::saveConfig);
 
 		addGeneralSettings(builder);
@@ -40,8 +40,8 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 
 	private static void addBoolean(ConfigCategory category, String label, String tooltip, boolean currentValue, Consumer<Boolean> onSave) {
 		category.addEntry(
-				ConfigBuilder.create().entryBuilder().startBooleanToggle(Text.of(label), currentValue)
-						.setTooltip(Text.of(tooltip))
+				ConfigBuilder.create().entryBuilder().startBooleanToggle(Component.literal(label), currentValue)
+						.setTooltip(Component.literal(tooltip))
 						.setDefaultValue(currentValue)
 						.setSaveConsumer(onSave)
 						.build()
@@ -50,8 +50,8 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 
 	private static void addIntField(ConfigCategory category, String label, String tooltip, int currentValue, Consumer<Integer> onSave, int min, int max) {
 		category.addEntry(
-				ConfigBuilder.create().entryBuilder().startIntField(Text.of(label), currentValue)
-						.setTooltip(Text.of(tooltip))
+				ConfigBuilder.create().entryBuilder().startIntField(Component.literal(label), currentValue)
+						.setTooltip(Component.literal(tooltip))
 						.setDefaultValue(currentValue)
 						.setSaveConsumer(newValue -> {
 							if (newValue < min) newValue = min;
@@ -64,8 +64,8 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 
 	private static void addDoubleField(ConfigCategory category, String label, String tooltip, double currentValue, Consumer<Double> onSave, double min, double max) {
 		category.addEntry(
-				ConfigBuilder.create().entryBuilder().startDoubleField(Text.of(label), currentValue)
-						.setTooltip(Text.of(tooltip))
+				ConfigBuilder.create().entryBuilder().startDoubleField(Component.literal(label), currentValue)
+						.setTooltip(Component.literal(tooltip))
 						.setDefaultValue(currentValue)
 						.setSaveConsumer(newValue -> {
 							if (newValue < min) newValue = min;
@@ -77,7 +77,7 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 	}
 
 	private static void addGeneralSettings(ConfigBuilder builder) {
-		ConfigCategory general = builder.getOrCreateCategory(Text.of("General Settings"));
+		ConfigCategory general = builder.getOrCreateCategory(Component.literal("General Settings"));
 
 		addBoolean(general, "Use Level Cost Per Enchantment", "Anvil transaction cost will equal the total enchantment " +
 						"level of the item times the cost per level",
@@ -111,7 +111,7 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 	}
 
 	private static void addAnvilCaps(ConfigBuilder builder) {
-		ConfigCategory anvilEnchantCaps = builder.getOrCreateCategory(Text.of("Anvil Enchant Caps"));
+		ConfigCategory anvilEnchantCaps = builder.getOrCreateCategory(Component.literal("Anvil Enchant Caps"));
 		ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 
 		addBoolean(anvilEnchantCaps, "Overwrite Anvil Enchantment Caps", "Overwrite anvil enchantment max levels",
@@ -137,14 +137,14 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 			String modId = group.getKey();
 			String categoryName = modId.equals("minecraft") ? "Vanilla" : UnboundHelper.formatIdToName(modId);
 
-			SubCategoryBuilder subCategory = entryBuilder.startSubCategory(Text.of(categoryName));
+			SubCategoryBuilder subCategory = entryBuilder.startSubCategory(Component.literal(categoryName));
 
 			for (Map.Entry<String, Integer> entry : group.getValue()) {
 				String id = entry.getKey();
 				String name = UnboundHelper.formatIdToName(id);
 
-				subCategory.add(entryBuilder.startIntField(Text.of(name), entry.getValue())
-						.setTooltip(Text.of("Enchantment Level Cap in the Anvil (" + id + ")"))
+				subCategory.add(entryBuilder.startIntField(Component.literal(name), entry.getValue())
+						.setTooltip(Component.literal("Enchantment Level Cap in the Anvil (" + id + ")"))
 						.setDefaultValue(255)
 						.setMin(1).setMax(255)
 						.setSaveConsumer(newValue -> ConfigManager.config.enchantmentAnvilCaps.put(id, newValue))
@@ -157,7 +157,7 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 	}
 
 	private static void addVillagerCaps(ConfigBuilder builder) {
-		ConfigCategory villagerEnchantCaps = builder.getOrCreateCategory(Text.of("Villager Enchant Caps"));
+		ConfigCategory villagerEnchantCaps = builder.getOrCreateCategory(Component.literal("Villager Enchant Caps"));
 		ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 
 		addBoolean(villagerEnchantCaps, "Modify Villagers", "Modify enchanted books from villager trading",
@@ -168,7 +168,7 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 				ConfigManager.config.useGlobalVillagerCap,
 				value -> ConfigManager.config.useGlobalVillagerCap = value);
 
-		addIntField(villagerEnchantCaps, "Global Anvil Cap", "Cap for all villager enchantments if enabled",
+		addIntField(villagerEnchantCaps, "Global Villager Cap", "Cap for all villager enchantments if enabled",
 				ConfigManager.config.globalVillagerCap,
 				value -> ConfigManager.config.globalVillagerCap = value,
 				1, 255);
@@ -183,14 +183,14 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 			String modId = group.getKey();
 			String categoryName = modId.equals("minecraft") ? "Vanilla" : UnboundHelper.formatIdToName(modId);
 
-			SubCategoryBuilder subCategory = entryBuilder.startSubCategory(Text.of(categoryName));
+			SubCategoryBuilder subCategory = entryBuilder.startSubCategory(Component.literal(categoryName));
 
 			for (Map.Entry<String, Integer> entry : group.getValue()) {
 				String id = entry.getKey();
 				String name = UnboundHelper.formatIdToName(id);
 
-				subCategory.add(entryBuilder.startIntField(Text.of(name), entry.getValue())
-						.setTooltip(Text.of("Enchantment Level Cap from Villager Trading (" + id + ")"))
+				subCategory.add(entryBuilder.startIntField(Component.literal(name), entry.getValue())
+						.setTooltip(Component.literal("Enchantment Level Cap from Villager Trading (" + id + ")"))
 						.setDefaultValue(10)
 						.setMin(1).setMax(255)
 						.setSaveConsumer(newValue -> ConfigManager.config.enchantmentVillagerCaps.put(id, newValue))
@@ -203,7 +203,7 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 	}
 
 	private static void addConflictSettings(ConfigBuilder builder) {
-		ConfigCategory conflicts = builder.getOrCreateCategory(Text.of("Enchant Conflicts"));
+		ConfigCategory conflicts = builder.getOrCreateCategory(Component.literal("Enchant Conflicts"));
 
 		addBoolean(conflicts, "Damage Enchants No Conflict", "Sharpness, Smite, and Bane of Arthropods aren't exclusive",
 				ConfigManager.config.damageConflicts,
@@ -235,7 +235,7 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 	}
 
 	private static void addOtherSettings(ConfigBuilder builder) {
-		ConfigCategory misc = builder.getOrCreateCategory(Text.of("Other Settings"));
+		ConfigCategory misc = builder.getOrCreateCategory(Component.literal("Other Settings"));
 
 		addBoolean(misc, "Enchantment Exclusivity", "Only allow tool enchantments on tools, armor enchantments on armor, etc.",
 				ConfigManager.config.itemEnchantConflicts,

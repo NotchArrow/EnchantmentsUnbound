@@ -3,10 +3,10 @@
   "package": "com.notcharrow.enchantmentsunbound.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "AnvilScreenHandlerMixin",
-    "EnchantBookFactoryMixin",
+    "AnvilMenuMixin",
     "EnchantmentMixin",
-    "ForgingScreenHandlerAccessor"
+    "ItemCombinerMenuAccessor",
+    "MerchantOfferMixin"
   ],
   "injectors": {
     "defaultRequire": 1

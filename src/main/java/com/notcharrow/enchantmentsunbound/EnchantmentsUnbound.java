@@ -6,8 +6,8 @@ import com.notcharrow.enchantmentsunbound.helper.TextFormat;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.minecraft.screen.AnvilScreenHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.AnvilMenu;
 
 public class EnchantmentsUnbound implements ModInitializer {
 
@@ -17,18 +17,18 @@ public class EnchantmentsUnbound implements ModInitializer {
 		CommandHelper.registerCommands();
 
 		ServerLifecycleEvents.SERVER_STARTED.register(((server) -> {
-			ConfigManager.updateEnchantmentLists(server.getRegistryManager());
+			ConfigManager.updateEnchantmentLists(server.registryAccess());
 		}));
 		ServerLifecycleEvents.END_DATA_PACK_RELOAD.register(((server, resourceManager, b) -> {
-			ConfigManager.updateEnchantmentLists(server.getRegistryManager());
+			ConfigManager.updateEnchantmentLists(server.registryAccess());
 		}));
 
 		ServerTickEvents.END_SERVER_TICK.register(server -> {
 			if (ConfigManager.config.showActionbarMessage) {
-				for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
-					if (player.currentScreenHandler instanceof AnvilScreenHandler anvil) {
-						int cost = anvil.getLevelCost();
-						player.sendMessage(TextFormat.styledText("✩ EU ✩ Cost: " + cost), true);
+				for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+					if (player.containerMenu instanceof AnvilMenu anvil) {
+						int cost = anvil.getCost();
+						player.sendSystemMessage(TextFormat.styledText("✩ EU ✩ Cost: " + cost), true);
 					}
 				}
 			}

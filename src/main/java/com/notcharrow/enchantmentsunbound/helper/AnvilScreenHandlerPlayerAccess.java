@@ -1,7 +1,7 @@
 package com.notcharrow.enchantmentsunbound.helper;
 
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 
 public interface AnvilScreenHandlerPlayerAccess {
-	PlayerEntity getPlayer();
+	Player getPlayer();
 }

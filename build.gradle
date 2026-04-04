@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.13-SNAPSHOT'
+	id 'net.fabricmc.fabric-loom' version '1.15-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -13,6 +13,8 @@ base {
 }
 
 repositories {
+    maven { url "https://maven.fabricmc.net" }
+    maven { url "https://libraries.minecraft.net" }
 	maven { url "https://maven.shedaniel.me/" } // For Cloth Config
 	maven { url "https://maven.terraformersmc.com/" } // For ModMenu
 	mavenCentral()
@@ -46,14 +48,14 @@ sourceSets {
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	//mappings loom.officialMojangMappings()
+	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	modCompileOnly "me.shedaniel.cloth:cloth-config-fabric:${project.clothconfig_version}"
-	modCompileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
+	compileOnly "me.shedaniel.cloth:cloth-config-fabric:${project.clothconfig_version}"
+	compileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
 	
 }
 
@@ -66,7 +68,7 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 21
+	it.options.release = 25
 }
 
 java {
@@ -75,8 +77,8 @@ java {
 	// If you remove this line, sources will not be generated.
 	// withSourcesJar()
 
-	sourceCompatibility = JavaVersion.VERSION_21
-	targetCompatibility = JavaVersion.VERSION_21
+	sourceCompatibility = JavaVersion.VERSION_25
+	targetCompatibility = JavaVersion.VERSION_25
 }
 
 jar {
