@@ -138,53 +138,6 @@ public class AnvilMenuMixin {
 		}
 		stack.remove(DataComponents.LORE);
 		stack.set(DataComponents.LORE, new ItemLore(lore));
-		/*
-		player.getEntityWorld().playSound(null, player.getX(), player.getY(), player.getZ(),
-				SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1.0F, 1.5F);
-		ci.cancel();
-		// TODO Reimplement logic, potential to add infinite anvil durability :O along with fancy sounds/effects etc...
-		/*
-		if (!player.isInCreativeMode()) {
-            player.addExperienceLevels(-this.levelCost.get());
-        }
-
-        if (this.repairItemUsage > 0) {
-            ItemStack itemStack = this.input.getStack(1);
-            if (!itemStack.isEmpty() && itemStack.getCount() > this.repairItemUsage) {
-                itemStack.decrement(this.repairItemUsage);
-                this.input.setStack(1, itemStack);
-            } else {
-                this.input.setStack(1, ItemStack.EMPTY);
-            }
-        } else if (!this.keepSecondSlot) {
-            this.input.setStack(1, ItemStack.EMPTY);
-        }
-
-        this.levelCost.set(0);
-        if (player instanceof ServerPlayerEntity serverPlayerEntity) {
-            if (!StringHelper.isBlank(this.newItemName) && !this.input.getStack(0).getName().getString().equals(this.newItemName)) {
-                serverPlayerEntity.getTextStream().filterText(this.newItemName);
-            }
-        }
-
-        this.input.setStack(0, ItemStack.EMPTY);
-        this.context.run((world, pos) -> {
-            BlockState blockState = world.getBlockState(pos);
-            if (!player.isInCreativeMode() && blockState.isIn(BlockTags.ANVIL) && player.getRandom().nextFloat() < 0.12F) {
-                BlockState blockState2 = AnvilBlock.getLandingState(blockState);
-                if (blockState2 == null) {
-                    world.removeBlock(pos, false);
-                    world.syncWorldEvent(1029, pos, 0);
-                } else {
-                    world.setBlockState(pos, blockState2, 2);
-                    world.syncWorldEvent(1030, pos, 0);
-                }
-            } else {
-                world.syncWorldEvent(1030, pos, 0);
-            }
-
-        });
-		 */
 	}
 
 	@ModifyConstant(
@@ -193,6 +146,18 @@ public class AnvilMenuMixin {
 	)
 	private int raiseTooExpensiveLimit(int original) {
 		return Integer.MAX_VALUE;
+	}
+
+	@ModifyConstant(
+			method = "lambda$onTake$0",
+			constant = @Constant(floatValue = 0.12F)
+	)
+	private static float infiniteAnvilDurability(float original) {
+		if (ConfigManager.config.infiniteAnvilDurability) {
+			return -1;
+		} else {
+			return original;
+		}
 	}
 
 	@Inject(method = "calculateIncreasedRepairCost", at = @At("TAIL"), cancellable = true)

@@ -29,6 +29,7 @@ public class EnchantmentsUnboundConfig {
 	public boolean crossbowConflicts = false;
 	public boolean toolConflicts = false;
 
+	public boolean infiniteAnvilDurability = false;
 	public boolean itemEnchantConflicts = true;
 	public boolean colorCodedRenaming = true;
 	public boolean lowRenamingCost = true;

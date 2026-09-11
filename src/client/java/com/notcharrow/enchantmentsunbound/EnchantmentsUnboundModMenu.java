@@ -237,6 +237,10 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 	private static void addOtherSettings(ConfigBuilder builder) {
 		ConfigCategory misc = builder.getOrCreateCategory(Component.literal("Other Settings"));
 
+		addBoolean(misc, "Infinite Anvil Durability", "Prevent anvils from breaking because of player usage.",
+				ConfigManager.config.infiniteAnvilDurability,
+				value -> ConfigManager.config.infiniteAnvilDurability = value);
+
 		addBoolean(misc, "Enchantment Exclusivity", "Only allow tool enchantments on tools, armor enchantments on armor, etc.",
 				ConfigManager.config.itemEnchantConflicts,
 				value -> ConfigManager.config.itemEnchantConflicts = value);
