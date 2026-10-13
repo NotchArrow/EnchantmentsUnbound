@@ -192,9 +192,10 @@ public class AnvilMenuMixin {
 				for (ChatFormatting fmt : activeFormats) {
 					charText = charText.withStyle(fmt);
 				}
-
 				nameText.append(charText);
 			}
+
+			nameText = nameText.copy().withStyle(style -> style.withItalic(false));
 
 			AnvilMenu anvil = ((AnvilMenu) (Object) this);
 			ItemStack itemStack = anvil.getSlot(2).getItem();
