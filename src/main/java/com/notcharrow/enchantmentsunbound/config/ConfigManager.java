@@ -65,6 +65,14 @@ public class ConfigManager {
 					ConfigManager.config.enchantmentVillagerCaps.put(id, enchantment.getMaxLevel());
 				}
 			}
+
+			if (!ConfigManager.config.enchantmentCommandCaps.containsKey(id)) {
+				if (id.contains("minecraft:")) {
+					ConfigManager.config.enchantmentCommandCaps.put(id, 255);
+				} else {
+					ConfigManager.config.enchantmentCommandCaps.put(id, enchantment.getMaxLevel());
+				}
+			}
 		}
 		ConfigManager.saveConfig();
 	}

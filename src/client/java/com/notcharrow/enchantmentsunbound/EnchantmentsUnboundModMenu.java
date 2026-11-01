@@ -32,6 +32,7 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 		addGeneralSettings(builder);
 		addAnvilCaps(builder);
 		addVillagerCaps(builder);
+		addEnchantmentCommandCaps(builder);
 		addConflictSettings(builder);
 		addOtherSettings(builder);
 
@@ -118,7 +119,7 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 				ConfigManager.config.useCustomAnvilCap,
 				value -> ConfigManager.config.useCustomAnvilCap = value);
 
-		addBoolean(anvilEnchantCaps, "Use Global Anvil Cap", "Use global cap for anvil enchants",
+		addBoolean(anvilEnchantCaps, "Use Global Anvil Cap", "Use a global cap for anvil enchants",
 				ConfigManager.config.useGlobalAnvilCap,
 				value -> ConfigManager.config.useGlobalAnvilCap = value);
 
@@ -164,7 +165,7 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 				ConfigManager.config.modifyVillagers,
 				value -> ConfigManager.config.modifyVillagers = value);
 
-		addBoolean(villagerEnchantCaps, "Use Global Villager Cap", "Use global cap for villager enchants",
+		addBoolean(villagerEnchantCaps, "Use Global Villager Cap", "Use a global cap for villager enchants",
 				ConfigManager.config.useGlobalVillagerCap,
 				value -> ConfigManager.config.useGlobalVillagerCap = value);
 
@@ -199,6 +200,52 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 			}
 
 			villagerEnchantCaps.addEntry(subCategory.build());
+		}
+	}
+
+	private static void addEnchantmentCommandCaps(ConfigBuilder builder) {
+		ConfigCategory enchantmentCommandCaps = builder.getOrCreateCategory(Component.literal("Enchant Command Caps"));
+		ConfigEntryBuilder entryBuilder = builder.entryBuilder();
+
+		addBoolean(enchantmentCommandCaps, "Modify Enchant Command", "Modify allowed values in the /enchant command",
+				ConfigManager.config.useCustomCommandCap,
+				value -> ConfigManager.config.useCustomCommandCap = value);
+
+		addBoolean(enchantmentCommandCaps, "Use Global Enchant Command Cap", "Use a global cap for the enchant command",
+				ConfigManager.config.useGlobalCommandCap,
+				value -> ConfigManager.config.useGlobalCommandCap = value);
+
+		addIntField(enchantmentCommandCaps, "Global Enchant Command Cap", "Cap for all enchant commands if enabled",
+				ConfigManager.config.globalCommandCap,
+				value -> ConfigManager.config.globalCommandCap = value,
+				1, 255);
+
+		Map<String, List<Map.Entry<String, Integer>>> groupedEnchants = new TreeMap<>();
+		for (Map.Entry<String, Integer> entry : ConfigManager.config.enchantmentCommandCaps.entrySet()) {
+			String namespace = entry.getKey().contains(":") ? entry.getKey().split(":")[0] : "minecraft";
+			groupedEnchants.computeIfAbsent(namespace, key -> new ArrayList<>()).add(entry);
+		}
+
+		for (Map.Entry<String, List<Map.Entry<String, Integer>>> group : groupedEnchants.entrySet()) {
+			String modId = group.getKey();
+			String categoryName = modId.equals("minecraft") ? "Vanilla" : UnboundHelper.formatIdToName(modId);
+
+			SubCategoryBuilder subCategory = entryBuilder.startSubCategory(Component.literal(categoryName));
+
+			for (Map.Entry<String, Integer> entry : group.getValue()) {
+				String id = entry.getKey();
+				String name = UnboundHelper.formatIdToName(id);
+
+				subCategory.add(entryBuilder.startIntField(Component.literal(name), entry.getValue())
+						.setTooltip(Component.literal("Enchantment Level Cap for /enchant (" + id + ")"))
+						.setDefaultValue(255)
+						.setMin(1).setMax(255)
+						.setSaveConsumer(newValue -> ConfigManager.config.enchantmentCommandCaps.put(id, newValue))
+						.build()
+				);
+			}
+
+			enchantmentCommandCaps.addEntry(subCategory.build());
 		}
 	}
 

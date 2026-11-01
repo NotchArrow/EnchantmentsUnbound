@@ -2,8 +2,10 @@
   "required": true,
   "package": "com.notcharrow.enchantmentsunbound.mixin",
   "compatibilityLevel": "JAVA_21",
+  "mixinextras": {"minVersion":  "0.5.5"},
   "mixins": [
     "AnvilMenuMixin",
+    "EnchantCommandMixin",
     "EnchantmentMixin",
     "ItemCombinerMenuAccessor",
     "MerchantOfferMixin"

@@ -13,13 +13,17 @@ public class EnchantmentsUnboundConfig {
 	public boolean useCustomAnvilCap = true;
 	public boolean useGlobalAnvilCap = false;
 	public int globalAnvilCap = 255;
-
 	public TreeMap<String, Integer> enchantmentAnvilCaps = new TreeMap<>();
 
 	public boolean modifyVillagers = false;
 	public boolean useGlobalVillagerCap = false;
 	public int globalVillagerCap = 10;
 	public TreeMap<String, Integer> enchantmentVillagerCaps = new TreeMap<>();
+
+	public boolean useCustomCommandCap = true;
+	public boolean useGlobalCommandCap = false;
+	public int globalCommandCap = 255;
+	public TreeMap<String, Integer> enchantmentCommandCaps = new TreeMap<>();
 
 	public boolean damageConflicts = true;
 	public boolean protectionConflicts = true;

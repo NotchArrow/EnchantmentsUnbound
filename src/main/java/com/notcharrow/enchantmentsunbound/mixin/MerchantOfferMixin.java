@@ -30,6 +30,9 @@ public abstract class MerchantOfferMixin {
 		if (ConfigManager.config.modifyVillagers) {
 			if (result.getItem() == Items.ENCHANTED_BOOK) {
 				ItemEnchantments enchantments = result.get(DataComponents.STORED_ENCHANTMENTS);
+				if (enchantments == null) {
+					return;
+				}
 				RandomSource random = RandomSource.create(baseCostA.count());
 				for (Object2IntMap.Entry<Holder<Enchantment>> entry : enchantments.entrySet()) {
 					int level;
