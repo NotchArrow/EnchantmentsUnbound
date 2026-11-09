@@ -1,4 +1,9 @@
 {
+  "modmenu.nameTranslation.enchantments-unbound": "Enchantments Unbound",
+  "modmenu.summaryTranslation.enchantments-unbound": "Uncapped enchantment levels, no too expensive, and no enchantment conflicts.",
+
+
+
   "enchantment.level.11": "XI",
   "enchantment.level.12": "XII",
   "enchantment.level.13": "XIII",

@@ -3,14 +3,15 @@
 	"id": "enchantments-unbound",
 	"version": "${version}",
 	"name": "Enchantments Unbound",
-	"description": "Uncapped enchantment levels in the anvil, no too expensive, and no enchantment conflicts.",
+	"description": "Uncapped enchantment levels, no too expensive, and no enchantment conflicts.",
 	"authors": [
 		"NotchArrow"
 	],
 	"contact": {
 		"homepage": "https://modrinth.com/project/enchantments-unbound",
 		"sources": "https://github.com/NotchArrow/EnchantmentsUnbound/",
-		"discord": "https://discord.gg/ZCaGkZeb4C"
+		"discord": "https://discord.gg/ZCaGkZeb4C",
+		"issues": "https://github.com/NotchArrow/EnchantmentsUnbound/issues/"
 	},
 	"license": "MIT",
 	"icon": "assets/enchantments-unbound/icon.png",
@@ -46,7 +47,8 @@
 	"custom": {
 		"modmenu": {
 			"links": {
-				"modmenu.crowdin": "https://crowdin.com/project/enchantments-unbound"
+				"modmenu.crowdin": "https://crowdin.com/project/enchantments-unbound",
+				"modmenu.discord": "https://discord.gg/ZCaGkZeb4C"
 			}
 		}
 	}
