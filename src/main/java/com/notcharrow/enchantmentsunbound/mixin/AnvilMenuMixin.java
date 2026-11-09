@@ -10,6 +10,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AnvilMenu;
@@ -115,29 +116,32 @@ public class AnvilMenuMixin {
 				lore.addAll(existingLore.lines());
 			}
 			if (((AnvilScreenHandlerPlayerAccess) self).getPlayer().experienceLevel >= cost.get()) {
-				lore.add(Component.literal("Level Cost: " + cost.get() + " levels.").withStyle(ChatFormatting.GREEN));
-				lore.add(Component.literal("You can still take the output!").withStyle(ChatFormatting.GREEN));
+				Style style = Style.EMPTY.withItalic(false).withColor(ChatFormatting.DARK_GREEN);
+				lore.add(Component.literal("Level Cost: " + cost.get() + " levels.").withStyle(style));
+				lore.add(Component.literal("✔ Enough levels!").withStyle(style));
 			} else {
-				lore.add(Component.literal("Level Cost: " + cost.get() + " levels.").withStyle(ChatFormatting.RED));
+				Style style = Style.EMPTY.withItalic(false).withColor(ChatFormatting.DARK_RED);
+				lore.add(Component.literal("Level Cost: " + cost.get() + " levels.").withStyle(style));
+				lore.add(Component.literal("✘ Not enough levels!").withStyle(style));
 			}
 			output.set(DataComponents.LORE, new ItemLore(lore));
 		}
 	}
 
 	@Inject(method = "onTake", at = @At("HEAD"))
-	private void removeTempLore(Player player, ItemStack stack, CallbackInfo ci) {
-		ItemLore existingLore = stack.get(DataComponents.LORE);
+	private void removeTempLore(Player player, ItemStack carried, CallbackInfo ci) {
+		ItemLore existingLore = carried.get(DataComponents.LORE);
 		List<Component> lore = new ArrayList<>();
 		if (existingLore != null) {
 			for (Component line: existingLore.lines()) {
 				String lineString = line.getString();
-				if (!lineString.contains("Level Cost:") && !lineString.contains("You can still take the output!")) {
+				if (!lineString.contains("Level Cost:") && !lineString.contains("levels!")) {
 					lore.add(line);
 				}
 			}
 		}
-		stack.remove(DataComponents.LORE);
-		stack.set(DataComponents.LORE, new ItemLore(lore));
+		carried.remove(DataComponents.LORE);
+		carried.set(DataComponents.LORE, new ItemLore(lore));
 	}
 
 	@ModifyConstant(
@@ -199,7 +203,9 @@ public class AnvilMenuMixin {
 
 			AnvilMenu anvil = ((AnvilMenu) (Object) this);
 			ItemStack itemStack = anvil.getSlot(2).getItem();
-			itemStack.set(DataComponents.CUSTOM_NAME, nameText);
+			if (!nameText.getString().isBlank()) {
+				itemStack.set(DataComponents.CUSTOM_NAME, nameText);
+			}
 			anvil.setItem(2, 1, itemStack);
 		}
 

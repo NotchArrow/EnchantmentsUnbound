@@ -44,9 +44,10 @@ public class UnboundHelper {
 	) {
 		ItemStack output = leftInput.copy();
 
-		if (StringUtil.isBlank(newName)) {
-			output.remove(DataComponents.CUSTOM_NAME);
-		} else {
+		if (
+				newName != null && !newName.isEmpty() &&
+				(output.getCustomName() == null || !output.getCustomName().getString().equals(newName))
+		) {
 			output.set(DataComponents.CUSTOM_NAME, Component.literal(newName));
 		}
 

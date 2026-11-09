@@ -24,6 +24,12 @@ public class ConfigInfoCommand {
 						.then(literal("anvilcaps")
 							.then(argument("Page Number", IntegerArgumentType.integer())
 								.executes(ConfigInfoCommand::executeAnvilCaps)))
+						.then(literal("villagercaps")
+							.then(argument("Page Number", IntegerArgumentType.integer())
+								.executes(ConfigInfoCommand::executeVillagerCaps)))
+						.then(literal("enchantcaps")
+							.then(argument("Page Number", IntegerArgumentType.integer())
+								.executes(ConfigInfoCommand::executeCommandCaps)))
 						.then(literal("anvilcost")
 							.executes(ConfigInfoCommand::executeAnvilCost))
 						.then(literal("misc")
@@ -54,6 +60,68 @@ public class ConfigInfoCommand {
 					context.getSource().sendSystemMessage(TextFormat.enchantCapText(name +  ": " + entry.getValue()));
 				}
 			}
+		} else {
+			context.getSource().sendSystemMessage(TextFormat.miscInfoText("Anvil modifications are not enabled."));
+		}
+
+		return 1;
+	}
+
+	private static int executeVillagerCaps(CommandContext<CommandSourceStack> context) {
+		TreeMap<String, Integer> capMap = ConfigManager.config.enchantmentVillagerCaps;
+		List<Map.Entry<String, Integer>> capList = new ArrayList<>(capMap.entrySet());
+		int pageNumber = IntegerArgumentType.getInteger(context, "Page Number");
+		int totalPages = (int) Math.ceil(capList.size() / 10.0);
+		pageNumber = Math.clamp(pageNumber, 1, totalPages);
+
+		context.getSource().sendSystemMessage(TextFormat.enchantCapText("Enchantment: Custom Villager Level Cap (Page " + pageNumber + " / " + totalPages + ")"));
+
+		if (ConfigManager.config.modifyVillagers) {
+			if (ConfigManager.config.useGlobalVillagerCap) {
+				context.getSource().sendSystemMessage(TextFormat.enchantCapText("Global Villager Cap: " + ConfigManager.config.globalVillagerCap));
+			} else {
+				for (int i = 10 * (pageNumber - 1); i < Math.min(capList.size(), 10 * pageNumber); i++) {
+					Map.Entry<String, Integer> entry = capList.get(i);
+					String name = UnboundHelper.formatIdToName(entry.getKey());
+					String modId = entry.getKey().split(":")[0];
+					if (!Objects.equals(modId, "minecraft")) {
+						name = "(" + UnboundHelper.formatIdToName(modId) + ") " + name;
+					}
+					context.getSource().sendSystemMessage(TextFormat.enchantCapText(name +  ": " + entry.getValue()));
+				}
+			}
+		} else {
+			context.getSource().sendSystemMessage(TextFormat.miscInfoText("Villager modifications are not enabled."));
+		}
+
+		return 1;
+	}
+
+	private static int executeCommandCaps(CommandContext<CommandSourceStack> context) {
+		TreeMap<String, Integer> capMap = ConfigManager.config.enchantmentCommandCaps;
+		List<Map.Entry<String, Integer>> capList = new ArrayList<>(capMap.entrySet());
+		int pageNumber = IntegerArgumentType.getInteger(context, "Page Number");
+		int totalPages = (int) Math.ceil(capList.size() / 10.0);
+		pageNumber = Math.clamp(pageNumber, 1, totalPages);
+
+		context.getSource().sendSystemMessage(TextFormat.enchantCapText("Enchantment: Custom /enchant Level Cap (Page " + pageNumber + " / " + totalPages + ")"));
+
+		if (ConfigManager.config.useCustomCommandCap) {
+			if (ConfigManager.config.useGlobalCommandCap) {
+				context.getSource().sendSystemMessage(TextFormat.enchantCapText("Global /enchant Cap: " + ConfigManager.config.globalCommandCap));
+			} else {
+				for (int i = 10 * (pageNumber - 1); i < Math.min(capList.size(), 10 * pageNumber); i++) {
+					Map.Entry<String, Integer> entry = capList.get(i);
+					String name = UnboundHelper.formatIdToName(entry.getKey());
+					String modId = entry.getKey().split(":")[0];
+					if (!Objects.equals(modId, "minecraft")) {
+						name = "(" + UnboundHelper.formatIdToName(modId) + ") " + name;
+					}
+					context.getSource().sendSystemMessage(TextFormat.enchantCapText(name +  ": " + entry.getValue()));
+				}
+			}
+		} else {
+			context.getSource().sendSystemMessage(TextFormat.miscInfoText("/enchant modifications are not enabled."));
 		}
 
 		return 1;
@@ -90,16 +158,17 @@ public class ConfigInfoCommand {
 
 	private static Map<String, Boolean> generateMiscMap() {
 		Map<String, Boolean> map = new LinkedHashMap<>();
-		map.put("Damage enchantment conflicts are removed", ConfigManager.config.damageConflicts);
-		map.put("Protection enchantment conflicts are removed", ConfigManager.config.protectionConflicts);
-		map.put("Bow enchantment conflicts are removed", ConfigManager.config.bowConflicts);
-		map.put("Boot enchantment conflicts are removed", ConfigManager.config.bootConflicts);
-		map.put("Trident enchantment conflicts are removed", ConfigManager.config.tridentConflicts);
-		map.put("Crossbow enchantment conflicts are removed", ConfigManager.config.crossbowConflicts);
-		map.put("Tool enchantment conflicts are removed", ConfigManager.config.toolConflicts);
+		map.put("Damage enchantment conflicts are removed.", ConfigManager.config.damageConflicts);
+		map.put("Protection enchantment conflicts are removed.", ConfigManager.config.protectionConflicts);
+		map.put("Bow enchantment conflicts are removed.", ConfigManager.config.bowConflicts);
+		map.put("Boot enchantment conflicts are removed.", ConfigManager.config.bootConflicts);
+		map.put("Trident enchantment conflicts are removed.", ConfigManager.config.tridentConflicts);
+		map.put("Crossbow enchantment conflicts are removed.", ConfigManager.config.crossbowConflicts);
+		map.put("Tool enchantment conflicts are removed.", ConfigManager.config.toolConflicts);
 
-		map.put("Any enchantment can go on any item", !ConfigManager.config.itemEnchantConflicts);
-		map.put("Color coded anvil renaming is enabled", ConfigManager.config.colorCodedRenaming);
+		map.put("Any enchantment can go on any item.", !ConfigManager.config.itemEnchantConflicts);
+		map.put("Color coded anvil renaming is enabled.", ConfigManager.config.colorCodedRenaming);
+		map.put("Anvils have infinite durability.", ConfigManager.config.infiniteAnvilDurability);
 		return map;
 	}
 }
