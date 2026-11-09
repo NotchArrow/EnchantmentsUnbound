@@ -3,9 +3,7 @@ plugins {
 	id 'maven-publish'
 }
 
-def mcVersion = project.minecraft_version
-def modVersion = project.mod_version
-version = "${modVersion}+mc${mcVersion}"
+version = "${project.mod_version}+mc${project.max_minecraft_version}"
 group = project.maven_group
 
 base {
@@ -47,12 +45,12 @@ sourceSets {
 
 dependencies {
 	// To change the versions see the gradle.properties file
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	minecraft "com.mojang:minecraft:${project.max_minecraft_version}"
 	//mappings loom.officialMojangMappings()
 	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
-    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
 	compileOnly "me.shedaniel.cloth:cloth-config-fabric:${project.clothconfig_version}"
 	compileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
@@ -60,10 +58,16 @@ dependencies {
 }
 
 processResources {
-	inputs.property "version", project.version
+	def map = [
+			"version": project.mod_version,
+			"min_minecraft_version": project.min_minecraft_version,
+			"max_minecraft_version": project.max_minecraft_version,
+			"loader_version": project.loader_version
+	]
+	inputs.properties map
 
 	filesMatching("fabric.mod.json") {
-		expand "version": inputs.properties.version
+		expand map
 	}
 }
 

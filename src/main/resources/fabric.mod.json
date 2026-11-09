@@ -34,13 +34,20 @@
         }
 	],
 	"depends": {
-		"fabricloader": ">=0.18.5",
-		"minecraft": ">=26.1 <=26.3",
+		"fabricloader": ">=${loader_version}",
+		"minecraft": ">=${min_minecraft_version} <=${max_minecraft_version}",
 		"java": ">=25",
 		"fabric-api": "*"
 	},
 	"suggests": {
 		"cloth-config": "*",
 		"modmenu": "*"
+	},
+	"custom": {
+		"modmenu": {
+			"links": {
+				"modmenu.crowdin": "https://crowdin.com/project/enchantments-unbound"
+			}
+		}
 	}
 }
