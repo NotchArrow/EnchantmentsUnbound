@@ -8,9 +8,10 @@ import net.minecraft.world.inventory.AnvilMenu;
 
 public class TextFormat {
 	public static MutableComponent styledText(String message) {
-		String[] messageParts = message.split(":");
-		MutableComponent styledText = Component.literal(messageParts[0] + ":").withStyle(ChatFormatting.YELLOW);
-		MutableComponent styledNumber = Component.literal(messageParts[1]).withStyle(ChatFormatting.GOLD);
+		int index = message.lastIndexOf(":");
+
+		MutableComponent styledText = Component.literal(message.substring(0, index + 1)).withStyle(ChatFormatting.YELLOW);
+		MutableComponent styledNumber = Component.literal(message.substring(index + 1)).withStyle(ChatFormatting.GOLD);
 
 		styledText.append(styledNumber);
 		return styledText;
