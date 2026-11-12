@@ -21,7 +21,7 @@ public class TextFormat {
 		int xpLevel = player.experienceLevel;
 		MutableComponent text = Component.translatable("text.enchantments-unbound.ui.anvilText", levelCost);
 
-		if (xpLevel >= levelCost) {
+		if (xpLevel >= levelCost || player.isCreative()) {
 			text.withStyle(ChatFormatting.GREEN);
 		} else {
 			text.withStyle(ChatFormatting.RED);

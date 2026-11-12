@@ -46,7 +46,7 @@ public class ConfigInfoCommand {
 
 		context.getSource().sendSystemMessage(
 				Component.translatable("text.enchantments-unbound.command.anvilCaps.title", pageNumber, totalPages)
-						.withStyle(ChatFormatting.YELLOW, ChatFormatting.UNDERLINE)
+						.withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD)
 		);
 
 		if (ConfigManager.config.useCustomAnvilCap) {
@@ -76,7 +76,7 @@ public class ConfigInfoCommand {
 
 		context.getSource().sendSystemMessage(
 				Component.translatable("text.enchantments-unbound.command.villagerCaps.title", pageNumber, totalPages)
-						.withStyle(ChatFormatting.YELLOW, ChatFormatting.UNDERLINE)
+						.withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD)
 		);
 
 		if (ConfigManager.config.modifyVillagers) {
@@ -106,7 +106,7 @@ public class ConfigInfoCommand {
 
 		context.getSource().sendSystemMessage(
 				Component.translatable("text.enchantments-unbound.command.commandCaps.title", pageNumber, totalPages)
-						.withStyle(ChatFormatting.YELLOW, ChatFormatting.UNDERLINE)
+						.withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD)
 		);
 
 		if (ConfigManager.config.useCustomCommandCap) {
