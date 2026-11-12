@@ -1,7 +1,6 @@
 package com.notcharrow.enchantmentsunbound;
 
 import com.notcharrow.enchantmentsunbound.config.ConfigManager;
-import com.notcharrow.enchantmentsunbound.helper.UnboundHelper;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
@@ -10,6 +9,7 @@ import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 	private Screen createConfigScreen(Screen parent) {
 		ConfigBuilder builder = ConfigBuilder.create()
 				.setParentScreen(parent)
-				.setTitle(Component.literal("Enchantments Unbound Config"))
+				.setTitle(Component.translatable("text.enchantments-unbound.title"))
 				.setSavingRunnable(ConfigManager::saveConfig);
 
 		addGeneralSettings(builder);
@@ -39,20 +39,20 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 		return builder.build();
 	}
 
-	private static void addBoolean(ConfigCategory category, String label, String tooltip, boolean currentValue, Consumer<Boolean> onSave) {
+	private static void addBoolean(ConfigCategory category, MutableComponent label, MutableComponent tooltip, boolean currentValue, Consumer<Boolean> onSave) {
 		category.addEntry(
-				ConfigBuilder.create().entryBuilder().startBooleanToggle(Component.literal(label), currentValue)
-						.setTooltip(Component.literal(tooltip))
+				ConfigBuilder.create().entryBuilder().startBooleanToggle(label, currentValue)
+						.setTooltip(tooltip)
 						.setDefaultValue(currentValue)
 						.setSaveConsumer(onSave)
 						.build()
 		);
 	}
 
-	private static void addIntField(ConfigCategory category, String label, String tooltip, int currentValue, Consumer<Integer> onSave, int min, int max) {
+	private static void addIntField(ConfigCategory category, MutableComponent label, MutableComponent tooltip, int currentValue, Consumer<Integer> onSave, int min, int max) {
 		category.addEntry(
-				ConfigBuilder.create().entryBuilder().startIntField(Component.literal(label), currentValue)
-						.setTooltip(Component.literal(tooltip))
+				ConfigBuilder.create().entryBuilder().startIntField(label, currentValue)
+						.setTooltip(tooltip)
 						.setDefaultValue(currentValue)
 						.setSaveConsumer(newValue -> {
 							if (newValue < min) newValue = min;
@@ -63,10 +63,10 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 		);
 	}
 
-	private static void addDoubleField(ConfigCategory category, String label, String tooltip, double currentValue, Consumer<Double> onSave, double min, double max) {
+	private static void addDoubleField(ConfigCategory category, MutableComponent label, MutableComponent tooltip, double currentValue, Consumer<Double> onSave, double min, double max) {
 		category.addEntry(
-				ConfigBuilder.create().entryBuilder().startDoubleField(Component.literal(label), currentValue)
-						.setTooltip(Component.literal(tooltip))
+				ConfigBuilder.create().entryBuilder().startDoubleField(label, currentValue)
+						.setTooltip(tooltip)
 						.setDefaultValue(currentValue)
 						.setSaveConsumer(newValue -> {
 							if (newValue < min) newValue = min;
@@ -78,52 +78,71 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 	}
 
 	private static void addGeneralSettings(ConfigBuilder builder) {
-		ConfigCategory general = builder.getOrCreateCategory(Component.literal("General Settings"));
+		ConfigCategory general = builder.getOrCreateCategory(Component.translatable("text.enchantments-unbound.category.general"));
 
-		addBoolean(general, "Use Level Cost Per Enchantment", "Anvil transaction cost will equal the total enchantment " +
-						"level of the item times the cost per level",
+		addBoolean(
+				general,
+				Component.translatable("text.enchantments-unbound.config.useXpPerEnchantLevel"),
+				Component.translatable("text.enchantments-unbound.config.useXpPerEnchantLevel.tooltip"),
 				ConfigManager.config.useXpPerEnchantLevel,
-				value -> ConfigManager.config.useXpPerEnchantLevel = value);
+				value -> ConfigManager.config.useXpPerEnchantLevel = value
+		);
 
-		addIntField(general, "Level Cost Per Enchantment Level", "The level cost per enchantment present on the anvil output",
+		addIntField(general,
+				Component.translatable("text.enchantments-unbound.config.xpPerEnchantLevel"),
+				Component.translatable("text.enchantments-unbound.config.xpPerEnchantLevel.tooltip"),
 				ConfigManager.config.xpPerEnchantLevel,
 				value -> ConfigManager.config.xpPerEnchantLevel = value,
 				1, Integer.MAX_VALUE);
 
-		addBoolean(general, "Static Cost", "Use static cost instead of vanilla scaling",
+		addBoolean(general,
+				Component.translatable("text.enchantments-unbound.config.staticCost"),
+				Component.translatable("text.enchantments-unbound.config.staticCost.tooltip"),
 				ConfigManager.config.staticCost,
 				value -> ConfigManager.config.staticCost = value);
 
-		addIntField(general, "Level Cost", "The level cost if Static Cost is enabled",
+		addIntField(general,
+				Component.translatable("text.enchantments-unbound.config.levelCost"),
+				Component.translatable("text.enchantments-unbound.config.levelCost.tooltip"),
 				ConfigManager.config.levelCost,
 				value -> ConfigManager.config.levelCost = value,
 				1, Integer.MAX_VALUE);
 
-		addDoubleField(general, "Scaling Cost Multiplier", "The multiplier to increase the level cost by each transaction " +
-						"(vanilla default: 2.0)",
+		addDoubleField(general,
+				Component.translatable("text.enchantments-unbound.config.levelCostScalingMultiplier"),
+				Component.translatable("text.enchantments-unbound.config.levelCostScalingMultiplier.tooltip"),
 				ConfigManager.config.levelCostScalingMultiplier,
 				value -> ConfigManager.config.levelCostScalingMultiplier = value,
 				1, Integer.MAX_VALUE);
 
-		addIntField(general, "Max Level Cost", "The maximum amount of levels that a transaction can cost",
+		addIntField(general,
+				Component.translatable("text.enchantments-unbound.config.maxLevelCost"),
+				Component.translatable("text.enchantments-unbound.config.maxLevelCost.tooltip"),
 				ConfigManager.config.maxLevelCost,
 				value -> ConfigManager.config.maxLevelCost = value,
 				1, Integer.MAX_VALUE);
 	}
 
 	private static void addAnvilCaps(ConfigBuilder builder) {
-		ConfigCategory anvilEnchantCaps = builder.getOrCreateCategory(Component.literal("Anvil Enchant Caps"));
+		ConfigCategory anvilEnchantCaps = builder.getOrCreateCategory(
+				Component.translatable("text.enchantments-unbound.category.anvilEnchantCaps"));
 		ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 
-		addBoolean(anvilEnchantCaps, "Overwrite Anvil Enchantment Caps", "Overwrite anvil enchantment max levels",
+		addBoolean(anvilEnchantCaps,
+				Component.translatable("text.enchantments-unbound.config.useCustomAnvilCap"),
+				Component.translatable("text.enchantments-unbound.config.useCustomAnvilCap.tooltip"),
 				ConfigManager.config.useCustomAnvilCap,
 				value -> ConfigManager.config.useCustomAnvilCap = value);
 
-		addBoolean(anvilEnchantCaps, "Use Global Anvil Cap", "Use a global cap for anvil enchants",
+		addBoolean(anvilEnchantCaps,
+				Component.translatable("text.enchantments-unbound.config.useGlobalAnvilCap"),
+				Component.translatable("text.enchantments-unbound.config.useGlobalAnvilCap.tooltip"),
 				ConfigManager.config.useGlobalAnvilCap,
 				value -> ConfigManager.config.useGlobalAnvilCap = value);
 
-		addIntField(anvilEnchantCaps, "Global Anvil Cap", "Cap for all anvil enchantments if enabled",
+		addIntField(anvilEnchantCaps,
+				Component.translatable("text.enchantments-unbound.config.globalAnvilCap"),
+				Component.translatable("text.enchantments-unbound.config.globalAnvilCap.tooltip"),
 				ConfigManager.config.globalAnvilCap,
 				value -> ConfigManager.config.globalAnvilCap = value,
 				1, 255);
@@ -136,16 +155,14 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 
 		for (Map.Entry<String, List<Map.Entry<String, Integer>>> group : groupedEnchants.entrySet()) {
 			String modId = group.getKey();
-			String categoryName = modId.equals("minecraft") ? "Vanilla" : UnboundHelper.formatIdToName(modId);
 
-			SubCategoryBuilder subCategory = entryBuilder.startSubCategory(Component.literal(categoryName));
+			SubCategoryBuilder subCategory = entryBuilder.startSubCategory(Component.translatable(modId));
 
 			for (Map.Entry<String, Integer> entry : group.getValue()) {
 				String id = entry.getKey();
-				String name = UnboundHelper.formatIdToName(id);
 
-				subCategory.add(entryBuilder.startIntField(Component.literal(name), entry.getValue())
-						.setTooltip(Component.literal("Enchantment Level Cap in the Anvil (" + id + ")"))
+				subCategory.add(entryBuilder.startIntField(Component.translatable(id), entry.getValue())
+						.setTooltip(Component.translatable("text.enchantments-unbound.config.enchantmentAnvilCap.tooltip", id))
 						.setDefaultValue(255)
 						.setMin(1).setMax(255)
 						.setSaveConsumer(newValue -> ConfigManager.config.enchantmentAnvilCaps.put(id, newValue))
@@ -158,18 +175,25 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 	}
 
 	private static void addVillagerCaps(ConfigBuilder builder) {
-		ConfigCategory villagerEnchantCaps = builder.getOrCreateCategory(Component.literal("Villager Enchant Caps"));
+		ConfigCategory villagerEnchantCaps = builder.getOrCreateCategory(
+				Component.translatable("text.enchantments-unbound.category.villagerEnchantCaps"));
 		ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 
-		addBoolean(villagerEnchantCaps, "Modify Villagers", "Modify enchanted books from villager trading",
+		addBoolean(villagerEnchantCaps,
+				Component.translatable("text.enchantments-unbound.config.modifyVillagers"),
+				Component.translatable("text.enchantments-unbound.config.modifyVillagers.tooltip"),
 				ConfigManager.config.modifyVillagers,
 				value -> ConfigManager.config.modifyVillagers = value);
 
-		addBoolean(villagerEnchantCaps, "Use Global Villager Cap", "Use a global cap for villager enchants",
+		addBoolean(villagerEnchantCaps,
+				Component.translatable("text.enchantments-unbound.config.useGlobalVillagerCap"),
+				Component.translatable("text.enchantments-unbound.config.useGlobalVillagerCap.tooltip"),
 				ConfigManager.config.useGlobalVillagerCap,
 				value -> ConfigManager.config.useGlobalVillagerCap = value);
 
-		addIntField(villagerEnchantCaps, "Global Villager Cap", "Cap for all villager enchantments if enabled",
+		addIntField(villagerEnchantCaps,
+				Component.translatable("text.enchantments-unbound.config.globalVillagerCap"),
+				Component.translatable("text.enchantments-unbound.config.globalVillagerCap.tooltip"),
 				ConfigManager.config.globalVillagerCap,
 				value -> ConfigManager.config.globalVillagerCap = value,
 				1, 255);
@@ -182,16 +206,14 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 
 		for (Map.Entry<String, List<Map.Entry<String, Integer>>> group : groupedEnchants.entrySet()) {
 			String modId = group.getKey();
-			String categoryName = modId.equals("minecraft") ? "Vanilla" : UnboundHelper.formatIdToName(modId);
 
-			SubCategoryBuilder subCategory = entryBuilder.startSubCategory(Component.literal(categoryName));
+			SubCategoryBuilder subCategory = entryBuilder.startSubCategory(Component.translatable(modId));
 
 			for (Map.Entry<String, Integer> entry : group.getValue()) {
 				String id = entry.getKey();
-				String name = UnboundHelper.formatIdToName(id);
 
-				subCategory.add(entryBuilder.startIntField(Component.literal(name), entry.getValue())
-						.setTooltip(Component.literal("Enchantment Level Cap from Villager Trading (" + id + ")"))
+				subCategory.add(entryBuilder.startIntField(Component.translatable(id), entry.getValue())
+						.setTooltip(Component.translatable("text.enchantments-unbound.config.enchantmentVillagerCap.tooltip", id))
 						.setDefaultValue(10)
 						.setMin(1).setMax(255)
 						.setSaveConsumer(newValue -> ConfigManager.config.enchantmentVillagerCaps.put(id, newValue))
@@ -204,18 +226,25 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 	}
 
 	private static void addEnchantmentCommandCaps(ConfigBuilder builder) {
-		ConfigCategory enchantmentCommandCaps = builder.getOrCreateCategory(Component.literal("Enchant Command Caps"));
+		ConfigCategory enchantmentCommandCaps = builder.getOrCreateCategory(
+				Component.translatable("text.enchantments-unbound.category.enchantmentCommandCaps"));
 		ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 
-		addBoolean(enchantmentCommandCaps, "Modify Enchant Command", "Modify allowed values in the /enchant command",
+		addBoolean(enchantmentCommandCaps,
+				Component.translatable("text.enchantments-unbound.config.useCustomCommandCap"),
+				Component.translatable("text.enchantments-unbound.config.useCustomCommandCap.tooltip"),
 				ConfigManager.config.useCustomCommandCap,
 				value -> ConfigManager.config.useCustomCommandCap = value);
 
-		addBoolean(enchantmentCommandCaps, "Use Global Enchant Command Cap", "Use a global cap for the enchant command",
+		addBoolean(enchantmentCommandCaps,
+				Component.translatable("text.enchantments-unbound.config.useGlobalCommandCap"),
+				Component.translatable("text.enchantments-unbound.config.useGlobalCommandCap.tooltip"),
 				ConfigManager.config.useGlobalCommandCap,
 				value -> ConfigManager.config.useGlobalCommandCap = value);
 
-		addIntField(enchantmentCommandCaps, "Global Enchant Command Cap", "Cap for all enchant commands if enabled",
+		addIntField(enchantmentCommandCaps,
+				Component.translatable("text.enchantments-unbound.config.globalCommandCap"),
+				Component.translatable("text.enchantments-unbound.config.globalCommandCap.tooltip"),
 				ConfigManager.config.globalCommandCap,
 				value -> ConfigManager.config.globalCommandCap = value,
 				1, 255);
@@ -228,16 +257,14 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 
 		for (Map.Entry<String, List<Map.Entry<String, Integer>>> group : groupedEnchants.entrySet()) {
 			String modId = group.getKey();
-			String categoryName = modId.equals("minecraft") ? "Vanilla" : UnboundHelper.formatIdToName(modId);
 
-			SubCategoryBuilder subCategory = entryBuilder.startSubCategory(Component.literal(categoryName));
+			SubCategoryBuilder subCategory = entryBuilder.startSubCategory(Component.translatable(modId));
 
 			for (Map.Entry<String, Integer> entry : group.getValue()) {
 				String id = entry.getKey();
-				String name = UnboundHelper.formatIdToName(id);
 
-				subCategory.add(entryBuilder.startIntField(Component.literal(name), entry.getValue())
-						.setTooltip(Component.literal("Enchantment Level Cap for /enchant (" + id + ")"))
+				subCategory.add(entryBuilder.startIntField(Component.translatable(id), entry.getValue())
+						.setTooltip(Component.translatable("text.enchantments-unbound.config.enchantmentCommandCap.tooltip", id))
 						.setDefaultValue(255)
 						.setMin(1).setMax(255)
 						.setSaveConsumer(newValue -> ConfigManager.config.enchantmentCommandCaps.put(id, newValue))
@@ -250,61 +277,89 @@ public class EnchantmentsUnboundModMenu implements ModMenuApi {
 	}
 
 	private static void addConflictSettings(ConfigBuilder builder) {
-		ConfigCategory conflicts = builder.getOrCreateCategory(Component.literal("Enchant Conflicts"));
+		ConfigCategory conflicts = builder.getOrCreateCategory(
+				Component.translatable("text.enchantments-unbound.category.conflicts"));
 
-		addBoolean(conflicts, "Damage Enchants No Conflict", "Sharpness, Smite, and Bane of Arthropods aren't exclusive",
+		addBoolean(conflicts,
+				Component.translatable("text.enchantments-unbound.config.damageConflicts"),
+				Component.translatable("text.enchantments-unbound.config.damageConflicts.tooltip"),
 				ConfigManager.config.damageConflicts,
 				value -> ConfigManager.config.damageConflicts = value);
 
-		addBoolean(conflicts, "Protection Enchants No Conflict", "Protection, Blast, Projectile, and Fire Protection aren't exclusive",
+		addBoolean(conflicts,
+				Component.translatable("text.enchantments-unbound.config.protectionConflicts"),
+				Component.translatable("text.enchantments-unbound.config.protectionConflicts.tooltip"),
 				ConfigManager.config.protectionConflicts,
 				value -> ConfigManager.config.protectionConflicts = value);
 
-		addBoolean(conflicts, "Bow Enchants No Conflict", "Infinity and Mending aren't exclusive",
+		addBoolean(conflicts,
+				Component.translatable("text.enchantments-unbound.config.bowConflicts"),
+				Component.translatable("text.enchantments-unbound.config.bowConflicts.tooltip"),
 				ConfigManager.config.bowConflicts,
 				value -> ConfigManager.config.bowConflicts = value);
 
-		addBoolean(conflicts, "Boot Enchants No Conflict", "Depth Strider and Frost Walker aren't exclusive",
+		addBoolean(conflicts,
+				Component.translatable("text.enchantments-unbound.config.bootConflicts"),
+				Component.translatable("text.enchantments-unbound.config.bootConflicts.tooltip"),
 				ConfigManager.config.bootConflicts,
 				value -> ConfigManager.config.bootConflicts = value);
 
-		addBoolean(conflicts, "Trident Enchants No Conflict", "Riptide doesn't conflict with Channeling and Loyalty",
+		addBoolean(conflicts,
+				Component.translatable("text.enchantments-unbound.config.tridentConflicts"),
+				Component.translatable("text.enchantments-unbound.config.tridentConflicts.tooltip"),
 				ConfigManager.config.tridentConflicts,
 				value -> ConfigManager.config.tridentConflicts = value);
 
-		addBoolean(conflicts, "Crossbow Enchants No Conflict", "Multishot and Piercing aren't exclusive",
+		addBoolean(conflicts,
+				Component.translatable("text.enchantments-unbound.config.crossbowConflicts"),
+				Component.translatable("text.enchantments-unbound.config.crossbowConflicts.tooltip"),
 				ConfigManager.config.crossbowConflicts,
 				value -> ConfigManager.config.crossbowConflicts = value);
 
-		addBoolean(conflicts, "Tool Enchants No Conflict", "Silk Touch and Fortune aren't exclusive",
+		addBoolean(conflicts,
+				Component.translatable("text.enchantments-unbound.config.toolConflicts"),
+				Component.translatable("text.enchantments-unbound.config.toolConflicts.tooltip"),
 				ConfigManager.config.toolConflicts,
 				value -> ConfigManager.config.toolConflicts = value);
 	}
 
 	private static void addOtherSettings(ConfigBuilder builder) {
-		ConfigCategory misc = builder.getOrCreateCategory(Component.literal("Other Settings"));
+		ConfigCategory misc = builder.getOrCreateCategory(
+				Component.translatable("text.enchantments-unbound.category.misc"));
 
-		addBoolean(misc, "Infinite Anvil Durability", "Prevent anvils from breaking because of player usage.",
+		addBoolean(misc,
+				Component.translatable("text.enchantments-unbound.config.infiniteAnvilDurability"),
+				Component.translatable("text.enchantments-unbound.config.infiniteAnvilDurability.tooltip"),
 				ConfigManager.config.infiniteAnvilDurability,
 				value -> ConfigManager.config.infiniteAnvilDurability = value);
 
-		addBoolean(misc, "Enchantment Exclusivity", "Only allow tool enchantments on tools, armor enchantments on armor, etc.",
+		addBoolean(misc,
+				Component.translatable("text.enchantments-unbound.config.itemEnchantConflicts"),
+				Component.translatable("text.enchantments-unbound.config.itemEnchantConflicts.tooltip"),
 				ConfigManager.config.itemEnchantConflicts,
 				value -> ConfigManager.config.itemEnchantConflicts = value);
 
-		addBoolean(misc, "Color Codes in Anvil Renaming", "Allow item names to use color codes using the '&' symbol",
+		addBoolean(misc,
+				Component.translatable("text.enchantments-unbound.config.colorCodedRenaming"),
+				Component.translatable("text.enchantments-unbound.config.colorCodedRenaming.tooltip", "&"),
 				ConfigManager.config.colorCodedRenaming,
 				value -> ConfigManager.config.colorCodedRenaming = value);
 
-		addBoolean(misc, "1 Level Renaming Cost", "Cap item renaming cost at 1 experience level",
+		addBoolean(misc,
+				Component.translatable("text.enchantments-unbound.config.lowRenamingCost"),
+				Component.translatable("text.enchantments-unbound.config.lowRenamingCost.tooltip"),
 				ConfigManager.config.lowRenamingCost,
 				value -> ConfigManager.config.lowRenamingCost = value);
 
-		addBoolean(misc, "Actionbar Cost Display", "Should the level cost of transactions display above the hotbar",
+		addBoolean(misc,
+				Component.translatable("text.enchantments-unbound.config.showActionbarMessage"),
+				Component.translatable("text.enchantments-unbound.config.showActionbarMessage.tooltip"),
 				ConfigManager.config.showActionbarMessage,
 				value -> ConfigManager.config.showActionbarMessage = value);
 
-		addBoolean(misc, "Tooltip Cost Display", "Should the level cost of transactions display in the item tooltip when above 39",
+		addBoolean(misc,
+				Component.translatable("text.enchantments-unbound.config.showTooltipMessage"),
+				Component.translatable("text.enchantments-unbound.config.showTooltipMessage.tooltip"),
 				ConfigManager.config.showTooltipMessage,
 				value -> ConfigManager.config.showTooltipMessage = value);
 	}

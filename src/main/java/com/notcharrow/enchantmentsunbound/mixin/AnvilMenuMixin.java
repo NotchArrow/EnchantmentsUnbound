@@ -117,12 +117,12 @@ public class AnvilMenuMixin {
 			}
 			if (((AnvilScreenHandlerPlayerAccess) self).getPlayer().experienceLevel >= cost.get()) {
 				Style style = Style.EMPTY.withItalic(false).withColor(ChatFormatting.DARK_GREEN);
-				lore.add(Component.literal("Level Cost: " + cost.get() + " levels.").withStyle(style));
-				lore.add(Component.literal("✔ Enough levels!").withStyle(style));
+				lore.add(Component.translatable("text.enchantments-unbound.ui.anvilText", cost.get()).withStyle(style));
+				lore.add(Component.translatable("text.enchantments-unbound.ui.anvilAffirmative").withStyle(style));
 			} else {
 				Style style = Style.EMPTY.withItalic(false).withColor(ChatFormatting.DARK_RED);
-				lore.add(Component.literal("Level Cost: " + cost.get() + " levels.").withStyle(style));
-				lore.add(Component.literal("✘ Not enough levels!").withStyle(style));
+				lore.add(Component.translatable("text.enchantments-unbound.ui.anvilText", cost.get()).withStyle(style));
+				lore.add(Component.translatable("text.enchantments-unbound.ui.anvilNegative").withStyle(style));
 			}
 			output.set(DataComponents.LORE, new ItemLore(lore));
 		}
@@ -132,10 +132,19 @@ public class AnvilMenuMixin {
 	private void removeTempLore(Player player, ItemStack carried, CallbackInfo ci) {
 		ItemLore existingLore = carried.get(DataComponents.LORE);
 		List<Component> lore = new ArrayList<>();
+
+		String anvilText = Component.translatable("text.enchantments-unbound.ui.anvilText", cost.get()).getString();
+		String anvilAffirmative = Component.translatable("text.enchantments-unbound.ui.anvilAffirmative", cost.get()).getString();
+		String anvilNegative = Component.translatable("text.enchantments-unbound.ui.anvilNegative", cost.get()).getString();
+
 		if (existingLore != null) {
 			for (Component line: existingLore.lines()) {
 				String lineString = line.getString();
-				if (!lineString.contains("Level Cost:") && !lineString.contains("levels!")) {
+				if (
+						!lineString.contains(anvilText) &&
+						!lineString.contains(anvilAffirmative) &&
+						!lineString.contains(anvilNegative)
+				) {
 					lore.add(line);
 				}
 			}

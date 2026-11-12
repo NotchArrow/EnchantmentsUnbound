@@ -1,9 +1,8 @@
 package com.notcharrow.enchantmentsunbound.mixin;
 
-import net.minecraft.ChatFormatting;
+import com.notcharrow.enchantmentsunbound.helper.TextFormat;
 import net.minecraft.client.gui.screens.inventory.AnvilScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,17 +19,7 @@ public class AnvilScreenMixin {
 
 	@Inject(method = "containerTick", at = @At("TAIL"))
 	private void handledScreenTick(CallbackInfo ci) {
-
-	AnvilScreen screen = ((AnvilScreen) (Object) this);
-	int levelCost = screen.getMenu().getCost();
-	int xpLevel = player.experienceLevel;
-	MutableComponent text = Component.literal("Enchantment Cost: " + levelCost);
-
-	if (xpLevel >= levelCost) {
-		text.withStyle(ChatFormatting.GREEN);
-	} else {
-		text.withStyle(ChatFormatting.RED);
-	}
-	TOO_EXPENSIVE_TEXT = text;
+		AnvilScreen screen = ((AnvilScreen) (Object) this);
+		TOO_EXPENSIVE_TEXT = TextFormat.anvilText(player, screen.getMenu());
 	}
 }

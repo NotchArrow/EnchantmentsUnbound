@@ -7,7 +7,6 @@ import net.fabricmc.fabric.api.item.v1.EnchantingContext;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.StringUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -148,17 +147,5 @@ public class UnboundHelper {
 		}
 
 		return ConfigManager.config.enchantmentAnvilCaps.getOrDefault(enchantment.getRegisteredName(), enchantment.value().getMaxLevel());
-	}
-
-	public static String formatIdToName(String id) {
-		String path = id.contains(":") ? id.split(":")[1] : id;
-		String[] words = path.split("_");
-		StringBuilder sb = new StringBuilder();
-		for (String word : words) {
-			if (!word.isEmpty()) {
-				sb.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1)).append(" ");
-			}
-		}
-		return sb.toString().trim();
 	}
 }

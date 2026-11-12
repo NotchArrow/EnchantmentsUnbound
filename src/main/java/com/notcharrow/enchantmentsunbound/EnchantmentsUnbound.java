@@ -27,8 +27,7 @@ public class EnchantmentsUnbound implements ModInitializer {
 			if (ConfigManager.config.showActionbarMessage) {
 				for (ServerPlayer player : server.getPlayerList().getPlayers()) {
 					if (player.containerMenu instanceof AnvilMenu anvil) {
-						int cost = anvil.getCost();
-						player.sendSystemMessage(TextFormat.styledText("✩ EU ✩ Cost: " + cost), true);
+						player.sendSystemMessage(TextFormat.anvilText(player, anvil), true);
 					}
 				}
 			}

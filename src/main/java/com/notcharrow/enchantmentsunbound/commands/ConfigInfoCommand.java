@@ -3,10 +3,10 @@ package com.notcharrow.enchantmentsunbound.commands;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.notcharrow.enchantmentsunbound.config.ConfigManager;
-import com.notcharrow.enchantmentsunbound.helper.TextFormat;
-import com.notcharrow.enchantmentsunbound.helper.UnboundHelper;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.Component;
 
 import java.util.*;
 
@@ -44,24 +44,24 @@ public class ConfigInfoCommand {
 		int totalPages = (int) Math.ceil(capList.size() / 10.0);
 		pageNumber = Math.clamp(pageNumber, 1, totalPages);
 
-		context.getSource().sendSystemMessage(TextFormat.enchantCapText("Enchantment: Custom Anvil Level Cap (Page " + pageNumber + " / " + totalPages + ")"));
+		context.getSource().sendSystemMessage(
+				Component.translatable("text.enchantments-unbound.command.anvilCaps.title", pageNumber, totalPages)
+						.withStyle(ChatFormatting.YELLOW, ChatFormatting.UNDERLINE)
+		);
 
 		if (ConfigManager.config.useCustomAnvilCap) {
 			if (ConfigManager.config.useGlobalAnvilCap) {
-				context.getSource().sendSystemMessage(TextFormat.enchantCapText("Global Anvil Cap: " + ConfigManager.config.globalAnvilCap));
+				context.getSource().sendSystemMessage(
+						Component.translatable("text.enchantments-unbound.command.anvilCaps.global",
+								ConfigManager.config.globalAnvilCap).withStyle(ChatFormatting.YELLOW)
+				);
 			} else {
-				for (int i = 10 * (pageNumber - 1); i < Math.min(capList.size(), 10 * pageNumber); i++) {
-					Map.Entry<String, Integer> entry = capList.get(i);
-					String name = UnboundHelper.formatIdToName(entry.getKey());
-					String modId = entry.getKey().split(":")[0];
-					if (!Objects.equals(modId, "minecraft")) {
-						name = "(" + UnboundHelper.formatIdToName(modId) + ") " + name;
-					}
-					context.getSource().sendSystemMessage(TextFormat.enchantCapText(name +  ": " + entry.getValue()));
-				}
+				CommandHelper.printPageInfo(context, capList, pageNumber);
 			}
 		} else {
-			context.getSource().sendSystemMessage(TextFormat.miscInfoText("Anvil modifications are not enabled."));
+			context.getSource().sendSystemMessage(
+					Component.translatable("text.enchantments-unbound.command.anvilCaps.disabled").withStyle(ChatFormatting.YELLOW)
+			);
 		}
 
 		return 1;
@@ -74,24 +74,24 @@ public class ConfigInfoCommand {
 		int totalPages = (int) Math.ceil(capList.size() / 10.0);
 		pageNumber = Math.clamp(pageNumber, 1, totalPages);
 
-		context.getSource().sendSystemMessage(TextFormat.enchantCapText("Enchantment: Custom Villager Level Cap (Page " + pageNumber + " / " + totalPages + ")"));
+		context.getSource().sendSystemMessage(
+				Component.translatable("text.enchantments-unbound.command.villagerCaps.title", pageNumber, totalPages)
+						.withStyle(ChatFormatting.YELLOW, ChatFormatting.UNDERLINE)
+		);
 
 		if (ConfigManager.config.modifyVillagers) {
 			if (ConfigManager.config.useGlobalVillagerCap) {
-				context.getSource().sendSystemMessage(TextFormat.enchantCapText("Global Villager Cap: " + ConfigManager.config.globalVillagerCap));
+				context.getSource().sendSystemMessage(
+						Component.translatable("text.enchantments-unbound.command.villagerCaps.global",
+								ConfigManager.config.globalVillagerCap).withStyle(ChatFormatting.YELLOW)
+				);
 			} else {
-				for (int i = 10 * (pageNumber - 1); i < Math.min(capList.size(), 10 * pageNumber); i++) {
-					Map.Entry<String, Integer> entry = capList.get(i);
-					String name = UnboundHelper.formatIdToName(entry.getKey());
-					String modId = entry.getKey().split(":")[0];
-					if (!Objects.equals(modId, "minecraft")) {
-						name = "(" + UnboundHelper.formatIdToName(modId) + ") " + name;
-					}
-					context.getSource().sendSystemMessage(TextFormat.enchantCapText(name +  ": " + entry.getValue()));
-				}
+				CommandHelper.printPageInfo(context, capList, pageNumber);
 			}
 		} else {
-			context.getSource().sendSystemMessage(TextFormat.miscInfoText("Villager modifications are not enabled."));
+			context.getSource().sendSystemMessage(
+					Component.translatable("text.enchantments-unbound.command.villagerCaps.disabled").withStyle(ChatFormatting.YELLOW)
+			);
 		}
 
 		return 1;
@@ -104,24 +104,24 @@ public class ConfigInfoCommand {
 		int totalPages = (int) Math.ceil(capList.size() / 10.0);
 		pageNumber = Math.clamp(pageNumber, 1, totalPages);
 
-		context.getSource().sendSystemMessage(TextFormat.enchantCapText("Enchantment: Custom /enchant Level Cap (Page " + pageNumber + " / " + totalPages + ")"));
+		context.getSource().sendSystemMessage(
+				Component.translatable("text.enchantments-unbound.command.commandCaps.title", pageNumber, totalPages)
+						.withStyle(ChatFormatting.YELLOW, ChatFormatting.UNDERLINE)
+		);
 
 		if (ConfigManager.config.useCustomCommandCap) {
 			if (ConfigManager.config.useGlobalCommandCap) {
-				context.getSource().sendSystemMessage(TextFormat.enchantCapText("Global /enchant Cap: " + ConfigManager.config.globalCommandCap));
+				context.getSource().sendSystemMessage(
+						Component.translatable("text.enchantments-unbound.command.commandCaps.global",
+								ConfigManager.config.globalCommandCap).withStyle(ChatFormatting.YELLOW)
+				);
 			} else {
-				for (int i = 10 * (pageNumber - 1); i < Math.min(capList.size(), 10 * pageNumber); i++) {
-					Map.Entry<String, Integer> entry = capList.get(i);
-					String name = UnboundHelper.formatIdToName(entry.getKey());
-					String modId = entry.getKey().split(":")[0];
-					if (!Objects.equals(modId, "minecraft")) {
-						name = "(" + UnboundHelper.formatIdToName(modId) + ") " + name;
-					}
-					context.getSource().sendSystemMessage(TextFormat.enchantCapText(name +  ": " + entry.getValue()));
-				}
+				CommandHelper.printPageInfo(context, capList, pageNumber);
 			}
 		} else {
-			context.getSource().sendSystemMessage(TextFormat.miscInfoText("/enchant modifications are not enabled."));
+			context.getSource().sendSystemMessage(
+					Component.translatable("text.enchantments-unbound.command.commandCaps.disabled").withStyle(ChatFormatting.YELLOW)
+			);
 		}
 
 		return 1;
@@ -129,17 +129,27 @@ public class ConfigInfoCommand {
 
 	private static int executeAnvilCost(CommandContext<CommandSourceStack> context) {
 		if (ConfigManager.config.staticCost) {
-			context.getSource().sendSystemMessage(TextFormat.costInfoText("All anvil transactions cost " +
-					ConfigManager.config.levelCost + " levels."));
+			context.getSource().sendSystemMessage(
+					Component.translatable("text.enchantments-unbound.command.anvilCost.static",
+							ConfigManager.config.levelCost).withStyle(ChatFormatting.YELLOW)
+			);
 		} else if (ConfigManager.config.useXpPerEnchantLevel) {
-			context.getSource().sendSystemMessage(TextFormat.costInfoText("Anvil transactions will cost " + ConfigManager.config.xpPerEnchantLevel +
-					" levels per enchantment level on the item."));
-			context.getSource().sendSystemMessage(TextFormat.costInfoText("Ex: Sharp VI, Unbreaking IV = 10 x " + ConfigManager.config.xpPerEnchantLevel +
-					" levels = " + 10 * ConfigManager.config.xpPerEnchantLevel + " levels."));
+			context.getSource().sendSystemMessage(
+					Component.translatable("text.enchantments-unbound.command.anvilCost.perEnchant",
+							ConfigManager.config.xpPerEnchantLevel).withStyle(ChatFormatting.YELLOW)
+			);
+
+			context.getSource().sendSystemMessage(
+					Component.translatable("text.enchantments-unbound.command.anvilCost.example",
+							ConfigManager.config.xpPerEnchantLevel,
+							10 * ConfigManager.config.xpPerEnchantLevel).withStyle(ChatFormatting.YELLOW)
+			);
 		} else {
-			context.getSource().sendSystemMessage(TextFormat.costInfoText("Anvil transaction cost increases by " +
-					ConfigManager.config.levelCostScalingMultiplier + "x every transaction, with a maximum cost of " +
-					ConfigManager.config.maxLevelCost + " levels."));
+			context.getSource().sendSystemMessage(
+					Component.translatable("text.enchantments-unbound.command.anvilCost.scaling",
+							ConfigManager.config.levelCostScalingMultiplier,
+							ConfigManager.config.maxLevelCost).withStyle(ChatFormatting.YELLOW)
+			);
 		}
 
 		return 1;
@@ -148,27 +158,30 @@ public class ConfigInfoCommand {
 	private static int executeMisc(CommandContext<CommandSourceStack> context) {
 		Map<String, Boolean> miscMap = generateMiscMap();
 
-		for (Map.Entry<String, Boolean> entry: miscMap.entrySet()) {
+		for (Map.Entry<String, Boolean> entry : miscMap.entrySet()) {
 			if (entry.getValue()) {
-				context.getSource().sendSystemMessage(TextFormat.miscInfoText(entry.getKey()));
+				context.getSource().sendSystemMessage(Component.translatable(entry.getKey()).withStyle(ChatFormatting.YELLOW));
 			}
 		}
+
 		return 1;
 	}
 
 	private static Map<String, Boolean> generateMiscMap() {
 		Map<String, Boolean> map = new LinkedHashMap<>();
-		map.put("Damage enchantment conflicts are removed.", ConfigManager.config.damageConflicts);
-		map.put("Protection enchantment conflicts are removed.", ConfigManager.config.protectionConflicts);
-		map.put("Bow enchantment conflicts are removed.", ConfigManager.config.bowConflicts);
-		map.put("Boot enchantment conflicts are removed.", ConfigManager.config.bootConflicts);
-		map.put("Trident enchantment conflicts are removed.", ConfigManager.config.tridentConflicts);
-		map.put("Crossbow enchantment conflicts are removed.", ConfigManager.config.crossbowConflicts);
-		map.put("Tool enchantment conflicts are removed.", ConfigManager.config.toolConflicts);
 
-		map.put("Any enchantment can go on any item.", !ConfigManager.config.itemEnchantConflicts);
-		map.put("Color coded anvil renaming is enabled.", ConfigManager.config.colorCodedRenaming);
-		map.put("Anvils have infinite durability.", ConfigManager.config.infiniteAnvilDurability);
+		map.put("text.enchantments-unbound.command.misc.damageConflicts", ConfigManager.config.damageConflicts);
+		map.put("text.enchantments-unbound.command.misc.protectionConflicts", ConfigManager.config.protectionConflicts);
+		map.put("text.enchantments-unbound.command.misc.bowConflicts", ConfigManager.config.bowConflicts);
+		map.put("text.enchantments-unbound.command.misc.bootConflicts", ConfigManager.config.bootConflicts);
+		map.put("text.enchantments-unbound.command.misc.tridentConflicts", ConfigManager.config.tridentConflicts);
+		map.put("text.enchantments-unbound.command.misc.crossbowConflicts", ConfigManager.config.crossbowConflicts);
+		map.put("text.enchantments-unbound.command.misc.toolConflicts", ConfigManager.config.toolConflicts);
+
+		map.put("text.enchantments-unbound.command.misc.anyItem", !ConfigManager.config.itemEnchantConflicts);
+		map.put("text.enchantments-unbound.command.misc.colorRenaming", ConfigManager.config.colorCodedRenaming);
+		map.put("text.enchantments-unbound.command.misc.infiniteDurability", ConfigManager.config.infiniteAnvilDurability);
+
 		return map;
 	}
 }

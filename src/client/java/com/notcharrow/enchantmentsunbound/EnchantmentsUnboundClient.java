@@ -17,7 +17,7 @@ public class EnchantmentsUnboundClient implements ClientModInitializer {
 		ResourceLoader.registerBuiltinPack(
 				Identifier.fromNamespaceAndPath("enchantments-unbound", "enchantment_numbers"),
 				FabricLoader.getInstance().getModContainer("enchantments-unbound").orElseThrow(),
-				Component.literal("Enchantment Numbers").setStyle(textStyle),
+				Component.translatable("text.enchantments-unbound.ui.resourcePackName").setStyle(textStyle),
 				PackActivationType.NORMAL
 		);
 	}
